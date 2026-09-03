@@ -1,0 +1,479 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><title>Overlap-Ensemble ACT on the Pi</title></head><body>
+
+<style>
+:root {
+  --ground: #f8f7f4;
+  --panel: #efede8;
+  --ink: #22252a;
+  --muted: #6a7076;
+  --line: #d8d5cd;
+  --accent: #c9372c;
+  --blue: #3a6ea5;
+  --chunk0: #8a8f96;
+  --chunk1: #3a6ea5;
+  --chunk2: #c9372c;
+  --code-bg: #ecebe5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #191b1f;
+    --panel: #21242a;
+    --ink: #e6e5e1;
+    --muted: #9aa0a8;
+    --line: #33373e;
+    --accent: #e05648;
+    --blue: #6ea3d8;
+    --chunk0: #7d838c;
+    --chunk1: #6ea3d8;
+    --chunk2: #e05648;
+    --code-bg: #22252b;
+  }
+}
+:root[data-theme="light"] {
+  --ground: #f8f7f4; --panel: #efede8; --ink: #22252a; --muted: #6a7076;
+  --line: #d8d5cd; --accent: #c9372c; --blue: #3a6ea5;
+  --chunk0: #8a8f96; --chunk1: #3a6ea5; --chunk2: #c9372c; --code-bg: #ecebe5;
+}
+:root[data-theme="dark"] {
+  --ground: #191b1f; --panel: #21242a; --ink: #e6e5e1; --muted: #9aa0a8;
+  --line: #33373e; --accent: #e05648; --blue: #6ea3d8;
+  --chunk0: #7d838c; --chunk1: #6ea3d8; --chunk2: #e05648; --code-bg: #22252b;
+}
+html { background: var(--ground); }
+body {
+  font-family: Charter, "Bitstream Charter", Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0;
+  padding: 2.5rem 1.25rem 5rem;
+}
+.page { max-width: 46rem; margin: 0 auto; }
+.eyebrow {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.5rem;
+}
+h1 {
+  font-size: 1.9rem;
+  line-height: 1.2;
+  margin: 0 0 0.4rem;
+  text-wrap: balance;
+  font-weight: 700;
+}
+.subtitle { color: var(--muted); margin: 0 0 0.75rem; font-size: 1.02rem; }
+.meta {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.78rem;
+  color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0;
+  margin-bottom: 2.2rem;
+}
+.meta b { color: var(--ink); font-weight: 600; }
+h2 {
+  font-size: 1.22rem;
+  margin: 2.6rem 0 0.7rem;
+  font-weight: 700;
+}
+h2 .sec {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.15rem;
+}
+p { margin: 0 0 0.9rem; }
+strong { font-weight: 700; }
+em { font-style: italic; }
+.figure {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1rem 1rem 0.6rem;
+  margin: 1.2rem 0 1.4rem;
+  overflow-x: auto;
+}
+.figcap {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+.figcap b { color: var(--ink); }
+svg text {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+.eq {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-size: 1.12rem;
+  margin: 1.3rem 0;
+  flex-wrap: wrap;
+  font-style: italic;
+}
+.eq .rm { font-style: normal; }
+.eq .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; }
+.eq .frac > .num { padding: 0 0.35rem 0.12rem; border-bottom: 1.5px solid var(--ink); }
+.eq .frac > .den { padding: 0.12rem 0.35rem 0; }
+.eq sub, .eq sup { font-size: 0.7em; }
+.eq .op { font-style: normal; color: var(--muted); }
+.eq .hl { color: var(--accent); }
+.eq .hl2 { color: var(--blue); }
+.brace-label {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.72rem;
+  font-style: normal;
+  color: var(--muted);
+  text-align: center;
+  display: block;
+  margin-top: 0.2rem;
+}
+code, .mono {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.87em;
+  background: var(--code-bg);
+  padding: 0.08em 0.35em;
+  border-radius: 3px;
+}
+table {
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  margin: 1rem 0 1.2rem;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+th {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.35rem 0.9rem 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+}
+td { padding: 0.4rem 0.9rem 0.4rem 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.n { font-variant-numeric: tabular-nums; }
+.note {
+  border-left: 3px solid var(--blue);
+  padding: 0.55rem 0.9rem;
+  background: var(--panel);
+  border-radius: 0 4px 4px 0;
+  margin: 1.1rem 0;
+  font-size: 0.95rem;
+}
+.todo {
+  border: 1px dashed var(--muted);
+  border-radius: 4px;
+  padding: 0.6rem 0.9rem;
+  margin: 1.1rem 0;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.todo b { color: var(--accent); font-weight: 600; letter-spacing: 0.08em; }
+.todo ul { margin: 0.25rem 0 0; padding-left: 1.2rem; }
+.todo li { margin: 0.1rem 0; }
+.tablewrap { overflow-x: auto; }
+a { color: var(--blue); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<div class="page">
+<p class="eyebrow">Proto-Town · SO-101 · design note</p>
+<h1>Overlap-Ensemble ACT on the Pi</h1>
+<p class="subtitle">Continuous control from a 1-second brain: pipelined chunk inference with a freshness-weighted, fade-in ensemble.</p>
+<div class="meta">
+  <span>policy <b>act_v0 · 51.6M</b></span>
+  <span>chunk <b>K = 100 ticks (3.33 s)</b></span>
+  <span>inference <b>T ≈ 30 ticks (1.0 s, Pi 5 CPU)</b></span>
+  <span>rate <b>30 Hz</b></span>
+</div>
+
+<h2><span class="sec">01</span>The problem this solves</h2>
+<p>The v0 policy maps one observation (two 640×360 camera frames + 6 joint angles) to a <em>chunk</em> of 100 future joint targets. Full-chunk sync — what <code>rollout.py</code> does — executes the whole chunk, then stops the arm for ~1&nbsp;s to think. It works (roll002 placed the roll on the X), but the arm is blind for 3.3&nbsp;s at a stretch and idle 23% of the time.</p>
+<p>The overlap method removes both costs. Inference runs continuously in a background thread while the arm executes; every new chunk overlaps the previous ones, and where they overlap, their predictions are blended. The arm never stops, and its actions are re-anchored to a fresh observation every second instead of every 3.3.</p>
+
+<h2><span class="sec">02</span>The pipeline</h2>
+<p>The planner thread captures an observation at tick <em>t<sub>k</sub></em> and its chunk arrives T ≈ 30 ticks later, covering ticks <em>t<sub>k</sub></em> … <em>t<sub>k</sub></em>+99. A new inference starts the moment the previous one finishes, so chunks land every ~30 ticks:</p>
+
+<div class="figure">
+<svg viewBox="0 0 640 218" width="640" role="img" aria-label="Pipeline timeline: three overlapping chunks and the executor row">
+  <!-- tick axis -->
+  <line x1="70" y1="180" x2="620" y2="180" stroke="var(--line)" stroke-width="1"/>
+  <g fill="var(--muted)" font-size="10" text-anchor="middle">
+    <text x="70" y="196">0</text><text x="180" y="196">30</text>
+    <text x="290" y="196">60</text><text x="400" y="196">90</text>
+    <text x="510" y="196">120</text><text x="620" y="196">150</text>
+    <text x="345" y="212">tick (30 Hz)</text>
+  </g>
+  <g stroke="var(--line)" stroke-width="1">
+    <line x1="70" y1="176" x2="70" y2="184"/><line x1="180" y1="176" x2="180" y2="184"/>
+    <line x1="290" y1="176" x2="290" y2="184"/><line x1="400" y1="176" x2="400" y2="184"/>
+    <line x1="510" y1="176" x2="510" y2="184"/><line x1="620" y1="176" x2="620" y2="184"/>
+  </g>
+  <!-- chunk 0 -->
+  <text x="6" y="34" font-size="10" fill="var(--chunk0)">chunk 0</text>
+  <circle cx="70" cy="30" r="3.5" fill="var(--chunk0)"/>
+  <rect x="70" y="24" width="110" height="12" fill="var(--chunk0)" opacity="0.35"/>
+  <rect x="180" y="24" width="256" height="12" fill="var(--chunk0)"/>
+  <text x="125" y="19" font-size="9" fill="var(--muted)" text-anchor="middle">infer</text>
+  <text x="308" y="19" font-size="9" fill="var(--muted)" text-anchor="middle">usable: ticks 30–99</text>
+  <!-- chunk 1 -->
+  <text x="6" y="84" font-size="10" fill="var(--chunk1)">chunk 1</text>
+  <circle cx="180" cy="80" r="3.5" fill="var(--chunk1)"/>
+  <rect x="180" y="74" width="110" height="12" fill="var(--chunk1)" opacity="0.35"/>
+  <rect x="290" y="74" width="256" height="12" fill="var(--chunk1)"/>
+  <!-- chunk 2 -->
+  <text x="6" y="134" font-size="10" fill="var(--chunk2)">chunk 2</text>
+  <circle cx="290" cy="130" r="3.5" fill="var(--chunk2)"/>
+  <rect x="290" y="124" width="110" height="12" fill="var(--chunk2)" opacity="0.35"/>
+  <rect x="400" y="124" width="220" height="12" fill="var(--chunk2)"/>
+  <!-- overlap shading between usable regions -->
+  <rect x="290" y="24" width="146" height="112" fill="var(--accent)" opacity="0.07"/>
+  <text x="363" y="112" font-size="9" fill="var(--accent)" text-anchor="middle">2–3 chunks overlap</text>
+  <!-- executor row -->
+  <text x="6" y="162" font-size="10" fill="var(--ink)">executor</text>
+  <rect x="70" y="152" width="110" height="8" fill="var(--muted)" opacity="0.3"/>
+  <rect x="180" y="152" width="440" height="8" fill="var(--ink)" opacity="0.75"/>
+  <text x="125" y="149" font-size="9" fill="var(--muted)" text-anchor="middle">hold (bootstrap)</text>
+  <text x="400" y="149" font-size="9" fill="var(--muted)" text-anchor="middle">one action every tick, never stops</text>
+</svg>
+<p class="figcap"><b>Fig. 1</b> — dot: observation captured. Pale bar: inference in flight (~30 ticks). Solid bar: the chunk's usable window once it arrives. Only the first second is stop-and-go; after that the executor always has 2–3 live chunks covering the current tick.</p>
+</div>
+
+<p>At any tick <em>t</em> after bootstrap, the chunks whose windows contain <em>t</em> and that have already arrived number <strong>two or three</strong> — anchored roughly 1&nbsp;s, 2&nbsp;s, and 3&nbsp;s in the past. That standing overlap is the raw material for the ensemble.</p>
+
+<h2><span class="sec">03</span>The ensemble</h2>
+<p>Chunk <em>k</em> is a matrix of absolute joint targets <em>â<sub>k</sub></em>[0…99] anchored at tick <em>t<sub>k</sub></em>; its prediction for absolute tick <em>t</em> is <em>â<sub>k</sub></em>(<em>t</em>) = <em>â<sub>k</sub></em>[<em>t</em> − <em>t<sub>k</sub></em>]. The executed action is the weighted mean over all live chunks, per joint:</p>
+
+<div class="eq">
+  <span>a(t)</span><span class="op">=</span>
+  <span class="frac">
+    <span class="num">Σ<sub>k</sub> w<sub>k</sub>(t) · â<sub>k</sub>(t)</span>
+    <span class="den">Σ<sub>k</sub> w<sub>k</sub>(t)</span>
+  </span>
+</div>
+
+<p>with each weight the product of two factors — freshness and fade-in:</p>
+
+<div class="eq">
+  <span>w<sub>k</sub>(t)</span><span class="op">=</span>
+  <span><span class="hl2">e<sup>−α·age<sub>k</sub>(t)</sup></span></span>
+  <span class="op">×</span>
+  <span><span class="hl">min(1, (t − arr<sub>k</sub> + 1) / F)</span></span>
+</div>
+<span class="brace-label">freshness (blue) &nbsp;·&nbsp; fade-in (red) &nbsp;·&nbsp; age<sub>k</sub>(t) = (t − t<sub>k</sub>)/30 s &nbsp;·&nbsp; arr<sub>k</sub> = arrival tick &nbsp;·&nbsp; F = 5 ticks</span>
+
+<p style="margin-top:1.1rem"><strong>Freshness.</strong> A chunk's authority decays exponentially with the age of the observation it was computed from. With α = 1.0:</p>
+
+<div class="tablewrap"><table>
+<tr><th>observation age</th><th>e<sup>−α·age</sup></th><th>typical role at that moment</th></tr>
+<tr><td class="n">1.0 s</td><td class="n">0.368</td><td>newest chunk, just arrived</td></tr>
+<tr><td class="n">2.0 s</td><td class="n">0.135</td><td>middle chunk</td></tr>
+<tr><td class="n">3.0 s</td><td class="n">0.050</td><td>oldest chunk, window nearly spent</td></tr>
+</table></div>
+
+<p>Normalized, a typical 3-chunk moment splits <strong>67% / 24% / 9%</strong> newest-to-oldest: the freshest prediction leads, the older ones smooth it. α is the single reactivity knob — α → 0 is a plain average, α large is “trust only the newest chunk.”</p>
+
+<div class="note">This <em>inverts</em> the ACT paper's ensemble, which weights <em>older</em> predictions more (<em>w<sub>i</sub></em> = e<sup>−m·i</sup>, i = 0 oldest) to buy smoothness. The paper can afford that because it infers every tick and averages ~90 chunks. Here, with a 1&nbsp;s observation-to-execution latency and only 2–3 chunks, reactivity is the point — and smoothness is bought instead by the fade-in below. If it proves twitchy, flipping α's sign is a one-character experiment. <em>Answered — see §07: the sign barely matters, the magnitude does, and the field optimum lands right where the paper's did.</em></div>
+
+<h2><span class="sec">04</span>The fade-in math</h2>
+<p>The fade-in exists because of a discretization problem the paper never faces. Its ensemble is a sum over ~90 chunks; one chunk entering shifts the mean by ~1%. Ours is a sum over 2–3, so a chunk entering at full weight <em>yanks</em> the mean.</p>
+<p>Quantify the yank. Just before chunk <em>n</em> arrives, the executed action is a(t) built from the old chunks. At arrival, the new mean is a convex blend of old and new:</p>
+
+<div class="eq">
+  <span>a′(t)</span><span class="op">=</span>
+  <span>(1 − λ) · a(t) + λ · â<sub>n</sub>(t)</span>
+  <span class="op">,</span>
+  <span>λ</span><span class="op">=</span>
+  <span class="frac">
+    <span class="num">w<sub>n</sub></span>
+    <span class="den">Σ<sub>old</sub> w<sub>k</sub> + w<sub>n</sub></span>
+  </span>
+</div>
+
+<p>so the command jumps by <strong>Δ = λ · (â<sub>n</sub>(t) − a(t))</strong> in a single 33&nbsp;ms tick. Plug in the α = 1 numbers: the arriving chunk has age 1&nbsp;s (w = 0.368) against old chunks of age 2&nbsp;s and 3&nbsp;s (0.135 + 0.050), giving λ ≈ 0.67. If the new chunk disagrees with the running blend by δ = 5° — routine mid-grasp, where a fresh view genuinely revises the plan — that is a <strong>3.3° command step in one tick</strong>: a visible kink, an audible servo snap, and a collision with the 4°/tick safety clamp.</p>
+<p>The fade-in spreads that same correction over F ticks by ramping the new chunk's weight linearly from 1/F to 1:</p>
+
+<div class="eq">
+  <span>fade<sub>n</sub>(t)</span><span class="op">=</span>
+  <span class="hl">min(1, (t − arr<sub>n</sub> + 1)/F)</span>
+  <span class="op">⇒</span>
+  <span>λ(i)</span><span class="op">=</span>
+  <span class="frac">
+    <span class="num">(i+1)/F · w<sub>n</sub></span>
+    <span class="den">Σ<sub>old</sub> w<sub>k</sub> + (i+1)/F · w<sub>n</sub></span>
+  </span>
+  <span class="op">,</span>
+  <span>i = 0 … F−1</span>
+</div>
+
+<p>With F = 5, λ steps through 0.28, 0.44, 0.54, 0.61, 0.67 over 165&nbsp;ms — the same authority handover, but the per-tick <em>increment</em> of the blend never exceeds ~1.4°·(δ/5°). The trajectory bends instead of kinking. The correction still completes in a sixth of a second, so reactivity is essentially untouched.</p>
+<p>No fade-<em>out</em> is needed on the way down: a chunk leaves the ensemble only when its window ends at age 3.33&nbsp;s, where its freshness weight (0.036) is already just ~7% of the total — its departure moves the mean by well under a degree.</p>
+
+<div class="figure">
+<svg viewBox="0 0 640 190" width="640" role="img" aria-label="Weight of one chunk over its lifetime: fade-in ramp then exponential decay">
+  <!-- axes -->
+  <line x1="60" y1="150" x2="620" y2="150" stroke="var(--line)"/>
+  <line x1="60" y1="20" x2="60" y2="150" stroke="var(--line)"/>
+  <g fill="var(--muted)" font-size="10">
+    <text x="55" y="154" text-anchor="end">0</text>
+    <text x="55" y="94" text-anchor="end">0.2</text>
+    <text x="55" y="34" text-anchor="end">0.4</text>
+    <text x="60" y="168" text-anchor="middle">1.0s</text>
+    <text x="200" y="168" text-anchor="middle">1.6s</text>
+    <text x="340" y="168" text-anchor="middle">2.2s</text>
+    <text x="480" y="168" text-anchor="middle">2.8s</text>
+    <text x="620" y="168" text-anchor="middle">3.33s</text>
+    <text x="340" y="184" text-anchor="middle">observation age when executed (chunk arrives at 1.0 s)</text>
+  </g>
+  <g stroke="var(--line)" stroke-dasharray="2 4">
+    <line x1="60" y1="90" x2="620" y2="90"/>
+    <line x1="60" y1="30" x2="620" y2="30"/>
+  </g>
+  <path d="M 60 128 L 68 113 L 76 99 L 84 85 L 92 71 L 100 57" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+  <path d="M 100 57 L 156 76 L 252 100 L 348 117 L 444 128 L 540 135 L 619 139" fill="none" stroke="var(--blue)" stroke-width="2.5"/>
+  <path d="M 60 150 L 60 40 L 74 46" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="112" y="34" font-size="9" fill="var(--muted)">without fade-in: full weight in one tick (the yank)</text>
+  <text x="118" y="70" font-size="10" fill="var(--accent)">fade-in, 5 ticks</text>
+  <text x="300" y="88" font-size="10" fill="var(--blue)">freshness decay e^(−α·age), α = 1</text>
+</svg>
+<p class="figcap"><b>Fig. 2</b> — one chunk's raw weight w<sub>k</sub> over its executed lifetime. Red: linear fade-in over F = 5 ticks. Blue: exponential freshness decay until the window expires at 3.33 s. Dashed: the step-function entry the fade-in replaces.</p>
+</div>
+
+<h2><span class="sec">05</span>Why it can't starve</h2>
+<p>The freshest chunk available at tick <em>t</em> was anchored no earlier than <em>t</em> − 2T (one inference just finished, one in flight), so its window reaches to at least</p>
+<div class="eq">
+  <span class="rm">(t − 2T) + K − 1 = t + 39 ticks</span>
+</div>
+<p>— the executor always holds ≥ 1.3 s of runway, and the general condition is <strong>2T &lt; K</strong>: inference under 1.67 s. Measured: mean 1.00 s, worst 1.25 s. Even one anomalous 2.3 s pass doesn't stall the arm. (The v1 chunk-150 model, training now, relaxes the bound to 2T &lt; 5 s.)</p>
+
+<h2><span class="sec">06</span>Safety &amp; diagnostics</h2>
+<p>Applied <em>after</em> ensembling, unchanged from <code>rollout.py</code>: every action clamped to the training-demo joint envelope (±2° margin), and no joint moves more than 4° in one tick. Same arm lock, same home-return on exit, same evidence trail (chunk-boundary JPEGs + full <code>log.json</code>).</p>
+<p>Two new per-tick diagnostics, because they are the experiment's actual readout: <strong>ensemble disagreement</strong> — the max spread between live chunks' predictions for the same tick, i.e. how much the policy revises its plan when observations refresh — and <strong>late ticks</strong>, since the executor now shares 4 cores with a 2-thread inference loop (the bench says this fits; the dry run verifies it).</p>
+
+<div class="tablewrap"><table>
+<tr><th>parameter</th><th>default</th><th>meaning</th></tr>
+<tr><td class="mono">α</td><td class="n">1.0</td><td>freshness decay (1/s). Lower = smoother, higher = more reactive.</td></tr>
+<tr><td class="mono">F</td><td class="n">5 ticks</td><td>fade-in length (~0.17 s).</td></tr>
+<tr><td class="mono">K</td><td class="n">100</td><td>chunk length — fixed by the v0 policy.</td></tr>
+<tr><td class="mono">T</td><td class="n">measured live</td><td>inference latency; logged per chunk, never assumed.</td></tr>
+</table></div>
+
+<h2><span class="sec">07</span>Field results — the α sweep</h2>
+
+<div class="todo"><b>SKELETON</b> — findings from the 2026-09-03 rig session are recorded below; footage and quantitative traces pending (arm was reassigned before capture).
+<ul>
+<li>[ ] footage: the start–recoil gait at large α</li>
+<li>[ ] footage: a missed grasp → mid-trajectory turnaround → retry</li>
+<li>[ ] per-α table: task success, recoil severity, recovery events, mean disagreement</li>
+<li>[ ] disagreement trace around a drop event (from log.json ticks)</li>
+<li>[ ] repeat sweep on v1 (chunk 150 — executed window sits deeper mid-horizon)</li>
+</ul>
+</div>
+
+<p><strong>Finding 1 — the optimum is near-uniform.</strong> Task performance peaked at α = +0.5 and −0.5 <em>equally</em>; the sign of α barely matters, only its magnitude. Over a 3.3 s chunk lifetime, |α| = 0.5 is close to a plain average of all live chunks — which is exactly the regime the ACT paper's ensemble (m = 0.01, near-uniform) operates in. The §03 question is answered: the sweep independently rediscovered the paper's setting from the hardware side.</p>
+
+<p><strong>Finding 2 — large α is a start–recoil gait.</strong> At high α the arm begins a motion, then pulls back, once per inference cycle. Mechanism: each arriving chunk is conditioned on an observation ~1 s stale by the time it dominates; its early actions command a return toward where the arm <em>was</em>, not where it is. Averaging at low α absorbs that transient; near-pure switching replays it every second. Task success collapses in this regime.</p>
+
+<p><strong>Finding 3 — large α produces emergent mid-actuation recovery.</strong> The headline result. On a missed grasp or dropped roll, the ensemble — dominated within a chunk or two by post-failure observations — bends the trajectory back and the arm retries, without any reset. Observed latency ≈ halfway through the return-to-X move: one inference (~1 s) plus fade-in and weight accumulation. No other controller in this project can do this:</p>
+
+<div class="tablewrap"><table>
+<tr><th>controller</th><th>blind window</th><th>on a missed grasp / drop</th></tr>
+<tr><td>LLM loop</td><td>entire actuation</td><td>full reset; cannot react mid-move</td></tr>
+<tr><td>sync chunks</td><td class="n">3.3 s</td><td>notices at the next chunk boundary, after the stop-and-think</td></tr>
+<tr><td>overlap, large α</td><td class="n">~1–1.5 s</td><td>turns around mid-trajectory and retries</td></tr>
+</table></div>
+
+<p><strong>The tension.</strong> One knob now provably controls two opposed properties: smoothness wants α small (Finding 1), reactivity wants α large (Finding 3), and no fixed value delivers both. That is the motivation for §08.</p>
+
+<h2><span class="sec">08</span>Next — the disagreement gate</h2>
+
+<div class="todo"><b>SKELETON</b> — proposed controller; implemented in <code>rollout_overlap_gated.py</code>, untested on hardware.
+<ul>
+<li>[ ] calibrate D<sub>on</sub> / D<sub>off</sub> from a nominal α = 0.5 run's divergence trace</li>
+<li>[ ] A/B: gated vs fixed α = 0.5, same start positions — success rate + recovery events</li>
+<li>[ ] footage: gate firing on a staged drop</li>
+</ul>
+</div>
+
+<p>Separate the two jobs. Run smooth by default, and use the ensemble's own <em>internal disagreement</em> as a change-of-world detector: when the newest chunk — the only one that has seen the last second — sharply diverges from the older chunks' consensus, something happened that the plan didn't predict. That divergence spike is precisely the moment reactivity is worth buying at the price of smoothness. The base ensemble of §03 is untouched; the only change is that α becomes a function of time. Implemented in <code>rollout_overlap_gated.py</code> (wrapper <code>run_policy_gated.sh</code>, runs named <code>grollNNN</code>).</p>
+
+<p style="margin-top:1.1rem"><strong>The divergence signal.</strong> With N live chunks, compare the newest chunk's prediction against the <em>mean of the older ones</em>, worst joint:</p>
+
+<div class="eq">
+  <span>div(t)</span><span class="op">=</span>
+  <span class="rm">max<sub><i>j</i></sub></span>
+  <span class="op">|</span>
+  <span>â<sub>new</sub><sup>(j)</sup>(t) −
+    <span class="frac">
+      <span class="num">Σ<sub>k ≠ new</sub> â<sub>k</sub><sup>(j)</sup>(t)</span>
+      <span class="den">N − 1</span>
+    </span>
+  </span>
+  <span class="op">|</span>
+</div>
+
+<p>(div = 0 when only one chunk is live). This is deliberately <em>not</em> the max–min spread logged as “disagreement”: the spread can be inflated by one stale outlier, while this signal asks specifically whether the freshest information contradicts the standing plan. One tick of it is noisy, so it is smoothed by a first-order EMA:</p>
+
+<div class="eq">
+  <span><span style="text-decoration:overline">div</span>(t)</span><span class="op">=</span>
+  <span>β · <span style="text-decoration:overline">div</span>(t−1) + (1 − β) · div(t)</span>
+</div>
+<span class="brace-label">β = 0.8 &nbsp;·&nbsp; time constant 1/(1−β) = 5 ticks ≈ 170 ms — one glitchy tick is attenuated to 20%</span>
+
+<p style="margin-top:1.1rem"><strong>The gate: hysteresis + asymmetric slew.</strong> The gate state g(t) ∈ [0, 1] chases a Schmitt-trigger target with a dead band, so it cannot chatter around a single threshold:</p>
+
+<div class="eq">
+  <span>g<sub>tgt</sub>(t)</span><span class="op">=</span>
+  <span class="rm">{ 1 if <span style="text-decoration:overline">div</span> &gt; D<sub>on</sub> &nbsp;·&nbsp; 0 if <span style="text-decoration:overline">div</span> &lt; D<sub>off</sub> &nbsp;·&nbsp; latch otherwise }</span>
+</div>
+<span class="brace-label">D<sub>on</sub> = 10° &nbsp;·&nbsp; D<sub>off</sub> = 5° &nbsp;·&nbsp; placeholders — see calibration below</span>
+
+<div class="eq">
+  <span>g(t)</span><span class="op">=</span>
+  <span class="rm">min(1, g(t−1) + 1/A) if rising&nbsp;,&nbsp;&nbsp; max(0, g(t−1) − 1/R) if falling</span>
+</div>
+<span class="brace-label">attack A = 5 ticks (~170 ms) &nbsp;·&nbsp; release R = 45 ticks (~1.5 s)</span>
+
+<p style="margin-top:1.1rem">The asymmetry is the point. Attack is fast because reacting is urgent. Release is <em>slower than one inference cycle</em> (45 &gt; 30 ticks) because the divergence spike collapses as soon as the pre-failure chunks expire — all live chunks then share the post-failure view — but the recovery maneuver has barely started at that moment. The slow release keeps the fresh plan in charge while it executes, then hands back smoothly.</p>
+
+<p><strong>Effective α.</strong></p>
+
+<div class="eq">
+  <span>α<sub>eff</sub>(t)</span><span class="op">=</span>
+  <span>α<sub>0</sub> + (α<sub>1</sub> − α<sub>0</sub>) · <span class="hl">g(t)</span></span>
+</div>
+<span class="brace-label">α<sub>0</sub> = 0.5 (cruise — the §07 optimum) &nbsp;·&nbsp; α<sub>1</sub> = 3.0 (boost — the §07 recovery regime)</span>
+
+<p style="margin-top:1.1rem">What that interpolation does to a typical 3-chunk moment (observation ages 1 s / 2 s / 3 s), normalized weights newest / middle / oldest:</p>
+
+<div class="tablewrap"><table>
+<tr><th>g</th><th>α<sub>eff</sub></th><th>newest</th><th>middle</th><th>oldest</th><th>regime</th></tr>
+<tr><td class="n">0</td><td class="n">0.5</td><td class="n">46%</td><td class="n">28%</td><td class="n">17%</td><td>near-uniform averaging — smooth cruise</td></tr>
+<tr><td class="n">0.5</td><td class="n">1.75</td><td class="n">79%</td><td class="n">14%</td><td class="n">2%</td><td>transition</td></tr>
+<tr><td class="n">1</td><td class="n">3.0</td><td class="n">95%</td><td class="n">4.7%</td><td class="n">0.2%</td><td>effectively pure switching — recovery</td></tr>
+</table></div>
+
+<p>An event trace reads: nominal motion at g = 0 → newest chunk sees the drop → <span style="text-decoration:overline">div</span> crosses D<sub>on</sub> → within 170 ms the ensemble is 95% newest-chunk → arm turns around → divergence subsides → over 1.5 s the weights relax back to the smooth blend.</p>
+
+<p><strong>Why the boost doesn't reintroduce the recoil.</strong> Two §04 protections survive intact: the fade-in factor still ramps every <em>arriving</em> chunk over F ticks (the yank analysis holds with λ scaled up), and the 4°/tick clamp bounds physical rate regardless of the blend. The gate removes the <em>cause</em> of the sustained start–recoil gait — the high-α regime is entered only for brief, justified windows instead of once per inference cycle.</p>
+
+<p><strong>Calibration criterion for D<sub>on</sub>/D<sub>off</sub>.</strong> From a nominal α = 0.5 run with no failures, the printed <span style="text-decoration:overline">div</span> p95 must sit <em>below</em> D<sub>on</sub>, else the gate fires during ordinary motion. oroll002/003 logged 10–24° nominal disagreement at decision points, so D<sub>on</sub> = 10 may prove too low; override per run with <code>--don</code>/<code>--doff</code>. Every tick logs [t, N<sub>live</sub>, spread, <span style="text-decoration:overline">div</span>, g] to <code>log.json</code> for post-hoc plots of when the gate fired and against what.</p>
+
+</div>
+
+</body></html>

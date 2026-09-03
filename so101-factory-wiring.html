@@ -1,0 +1,529 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style><title>SO101 Factory Wiring</title></head><body>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F3F4F0; --panel:#FFFFFF; --panel2:#EBEDE8; --ink:#1B2430; --ink2:#4A5560; --mute:#7C8794; --rule:#CBD0CC; --rule2:#E1E4DF;
+  --act:#D9531E; --act-bg:#FBE9DF; --act-ink:#8F320C;
+  --frz:#2E5C8A; --frz-bg:#E4ECF5; --frz-ink:#1F4266;
+  --out:#2F7D4F; --out-bg:#E3F1E7; --out-ink:#1E5A37;
+  --sys:#6B6F8A; --sys-bg:#E9E9F1; --sys-ink:#464A66;
+  --deny:#A42323; --deny-bg:#F6E0E0;
+  --code-bg:#ECEEE9;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14181D; --panel:#1B2127; --panel2:#222A31; --ink:#E6E9EC; --ink2:#B4BCC5; --mute:#8791A0; --rule:#343D47; --rule2:#2A323B;
+    --act:#F0703A; --act-bg:#3A2218; --act-ink:#F7B497;
+    --frz:#6FA3DA; --frz-bg:#1B2B3D; --frz-ink:#A9C8EA;
+    --out:#5DB97F; --out-bg:#183024; --out-ink:#A6DDB9;
+    --sys:#9CA0C4; --sys-bg:#262A3D; --sys-ink:#C3C6E2;
+    --deny:#E36B6B; --deny-bg:#3B1E1E;
+    --code-bg:#0F1317;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14181D; --panel:#1B2127; --panel2:#222A31; --ink:#E6E9EC; --ink2:#B4BCC5; --mute:#8791A0; --rule:#343D47; --rule2:#2A323B;
+  --act:#F0703A; --act-bg:#3A2218; --act-ink:#F7B497;
+  --frz:#6FA3DA; --frz-bg:#1B2B3D; --frz-ink:#A9C8EA;
+  --out:#5DB97F; --out-bg:#183024; --out-ink:#A6DDB9;
+  --sys:#9CA0C4; --sys-bg:#262A3D; --sys-ink:#C3C6E2;
+  --deny:#E36B6B; --deny-bg:#3B1E1E;
+  --code-bg:#0F1317;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.5}
+.sheet{max-width:1180px;margin:0 auto;padding:28px 24px 64px}
+h1,h2,h3{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif;text-wrap:balance;margin:0}
+h1{font-size:34px;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+h2{font-size:22px;font-weight:600;margin:0 0 6px}
+h3{font-size:16px;font-weight:600;color:var(--ink2)}
+p{max-width:68ch;margin:0 0 10px}
+code,pre,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+code{font-size:.9em;background:var(--code-bg);padding:1px 5px;border-radius:3px;color:var(--ink)}
+pre{background:var(--code-bg);padding:12px 14px;border-radius:4px;overflow-x:auto;font-size:13px;line-height:1.5;margin:8px 0}
+a{color:var(--frz)}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--mute);font-weight:600}
+.tb{border:1.5px solid var(--ink);display:grid;grid-template-columns:1fr auto;background:var(--panel)}
+.tb .name{padding:18px 22px;border-right:1.5px solid var(--ink)}
+.tb .name p{color:var(--ink2);margin:8px 0 0;max-width:70ch}
+.tb .meta{display:grid;grid-template-columns:repeat(2,minmax(150px,auto));font-size:13px}
+.tb .meta div{padding:10px 16px;border-bottom:1px solid var(--rule);border-left:1px solid var(--rule)}
+.tb .meta div:nth-last-child(-n+2){border-bottom:0}
+.tb .meta span{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--mute)}
+@media (max-width:760px){.tb{grid-template-columns:1fr}.tb .name{border-right:0;border-bottom:1.5px solid var(--ink)}.tb .meta div{border-left:0}}
+section{margin-top:44px}
+.sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1.5px solid var(--ink);padding-bottom:6px;margin-bottom:16px}
+.sec-head .num{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--mute)}
+.lede{color:var(--ink2)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13px;margin:14px 0 6px}
+.chip{display:inline-flex;align-items:center;gap:7px}
+.sw{width:14px;height:14px;border-radius:2px;border:1.5px solid}
+.sw.act{background:var(--act-bg);border-color:var(--act)}
+.sw.frz{background:var(--frz-bg);border-color:var(--frz)}
+.sw.out{background:var(--out-bg);border-color:var(--out)}
+.sw.sys{background:var(--sys-bg);border-color:var(--sys)}
+.dia{background:var(--panel);border:1px solid var(--rule);padding:12px;overflow-x:auto}
+.dia pre.mermaid{background:transparent;padding:0;margin:0;overflow:visible}
+.cap{font-size:13px;color:var(--mute);margin-top:6px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px 28px}
+.tw{overflow-x:auto;border:1px solid var(--rule);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-family:"IBM Plex Sans Condensed",sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.08em;text-align:left;color:var(--ink2);background:var(--panel2);padding:9px 12px;border-bottom:1.5px solid var(--ink);white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--rule2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.path{white-space:nowrap}
+tbody tr.group td{background:var(--panel2);font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;font-size:13px;letter-spacing:.02em;padding:6px 12px}
+.num{font-variant-numeric:tabular-nums}
+.b{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:1px 7px;border-radius:3px;border:1px solid;white-space:nowrap;line-height:1.6}
+.b.rw{background:var(--act-bg);border-color:var(--act);color:var(--act-ink)}
+.b.ro{background:var(--frz-bg);border-color:var(--frz);color:var(--frz-ink)}
+.b.tool{background:var(--out-bg);border-color:var(--out);color:var(--out-ink)}
+.b.deny{background:var(--deny-bg);border-color:var(--deny);color:var(--deny)}
+.b.sys{background:var(--sys-bg);border-color:var(--sys);color:var(--sys-ink)}
+td.stripe{width:6px;padding:0}
+tr.act td.stripe{background:var(--act)}
+tr.frz td.stripe{background:var(--frz)}
+tr.out td.stripe{background:var(--out)}
+tr.sys td.stripe{background:var(--sys)}
+.note{border-left:3px solid var(--act);background:var(--panel);padding:10px 14px;margin:14px 0;font-size:14px}
+.note.blue{border-color:var(--frz)}
+.note p:last-child{margin:0}
+.schema{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.schema .box{background:var(--panel);border:1px solid var(--rule);padding:12px 14px}
+.schema .box h3{margin-bottom:6px}
+dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;font-size:13px}
+dt{font-family:"IBM Plex Mono",monospace;color:var(--ink2);white-space:nowrap}
+dd{margin:0;color:var(--ink)}
+ul{margin:6px 0 10px;padding-left:20px;max-width:72ch}
+li{margin:3px 0}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.status .k{background:var(--panel);border:1px solid var(--rule);padding:10px 14px}
+.status .k b{display:block;font-family:"IBM Plex Sans Condensed",sans-serif;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.status .k span{font-size:12px;color:var(--mute)}
+</style>
+
+<div class="sheet">
+
+<div class="tb">
+  <div class="name">
+    <div class="eyebrow">System reference · sheet 1 of 1</div>
+    <h1>SO101 Factory Wiring</h1>
+    <p>How the data factory on the Pi turns a headless Claude sortie into LeRobot episodes: who may touch which file, what flows in, what comes out, and where every byte lands.</p>
+  </div>
+  <div class="meta">
+    <div><span>Host</span>protopi5 · Raspberry Pi 5 · 4 GB</div>
+    <div><span>Revision</span><span class="mono" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink)">a2939b2</span> · 2026-09-01 21:10</div>
+    <div><span>Factory repo</span><code>~/so101_datagen</code></div>
+    <div><span>Arm stack</span><code>~/so101_calibration</code></div>
+    <div><span>Execution agent</span>claude-fable-5-1 headless</div>
+    <div><span>Judge</span>claude-sonnet-5, context-free</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="chip"><i class="sw act"></i><b>Act layer</b> — motion strategy, agent may edit</span>
+  <span class="chip"><i class="sw frz"></i><b>Frozen layer</b> — recording, judging, budgets</span>
+  <span class="chip"><i class="sw out"></i><b>Outputs</b> — what the laptop pulls</span>
+  <span class="chip"><i class="sw sys"></i><b>Daemons & hardware</b> — outside the repo</span>
+</div>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">01</span><h2>Supervisor loop — one sortie at a time</h2></div>
+  <p class="lede"><code>factory.sh</code> runs as the systemd user service <code>factory</code> (unit kept in <code>systemd/</code>): enabled at boot with linger on, restarted 30 s after any failure, and it exits only after a deliberate <code>state/HALT</code>. Each pass spawns one fresh execution agent (a "sortie") with no memory of the last one; the handoff file and git history are the only continuity.</p>
+  <div class="dia">
+<pre class="mermaid">
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#E4ECF5","primaryTextColor":"#1B2430","primaryBorderColor":"#2E5C8A","lineColor":"#7C8794","fontFamily":"IBM Plex Sans, sans-serif","fontSize":"13px","edgeLabelBackground":"#F3F4F0"}}}%%
+flowchart TD
+  classDef act fill:#FBE9DF,stroke:#D9531E,color:#1B2430
+  classDef frz fill:#E4ECF5,stroke:#2E5C8A,color:#1B2430
+  classDef out fill:#E3F1E7,stroke:#2F7D4F,color:#1B2430
+  classDef sys fill:#E9E9F1,stroke:#6B6F8A,color:#1B2430
+  classDef halt fill:#F6E0E0,stroke:#A42323,color:#1B2430
+
+  H{{"state/HALT exists?"}}:::frz
+  G["wait while another sortie is alive<br/>(never two on the arm)"]:::frz
+  C["camd running? (systemd camd)"]:::sys
+  HL["tools/health.py<br/>throttle low nibble · RAM &gt; 400 MB · disk &gt; 2 GB · camd fresh"]:::frz
+  S["write state/sortie.json<br/>{sortie_id sNNNN, spawned_at, episodes: 0}"]:::frz
+  A["spawn sortie<br/>timeout -s KILL 3300 claude -p 'Run your next sortie…'<br/>--model claude-fable-5-1 --max-turns 200 --permission-mode acceptEdits<br/>--output-format stream-json | tools/agent_feed.py<br/>→ logs/sortie_sNNNN.log + /dev/shm/so101_agent.txt (camview panel)"]:::act
+  UL["real usage-limit rejection<br/>(feed RAW/LIMIT markers only) →<br/>sleep 15 min, not a crash"]:::sys
+  RC{"verdict = handoff.json 'exit'<br/>(process code only if it crashed:<br/>claude -p always exits 0)"}:::frz
+  EM["3 consecutive sorties with<br/>0 episodes → HALT"]:::halt
+  R0["0 → HALT 'coverage complete'<br/>(only with state/STOP_WHEN_COVERED)"]:::halt
+  R2["2 → budget/context used up<br/>respawn after 15 s"]:::out
+  R3["3 → fresh eyes needed<br/>STALLS+1 (2 in a row → HALT)"]:::frz
+  R5["5 → health failure<br/>throttled → HALT, else wait 120 s"]:::frz
+  RX["anything else / 137 KILL → crash<br/>tools/park_safe.py · CRASHES+1 (3 → HALT)"]:::halt
+  P["tools/park_safe.py · write state/HALT_REASON.md"]:::frz
+
+  H -- no --> G --> C --> HL
+  HL -- fail --> P
+  HL -- ok --> S --> A --> RC
+  A -.-> UL --> H
+  RC -.-> EM --> P
+  RC --> R0 --> P
+  RC --> R2 --> H
+  RC --> R3 --> H
+  RC --> R5 --> H
+  RC --> RX --> H
+  H -- yes --> P
+</pre>
+  </div>
+  <div class="cap">Graceful stop: <code>touch state/HALT</code> (parks after the current sortie). Emergency: <code>systemctl --user stop factory</code> kills the running sortie. Resume: delete <code>state/HALT</code>, <code>systemctl --user restart factory</code>.</div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">02</span><h2>Inside a sortie — what the agent actually does</h2></div>
+  <p class="lede">The agent reads <code>CLAUDE.md</code> and <code>state/handoff.json</code>, then runs the collect loop with the tools in <code>./tools/</code>. Every arm-touching step is a separate process; the dataset is only opened inside <code>episode.py</code>.</p>
+  <div class="dia">
+<pre class="mermaid">
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#E4ECF5","primaryTextColor":"#1B2430","primaryBorderColor":"#2E5C8A","lineColor":"#7C8794","fontFamily":"IBM Plex Sans, sans-serif","fontSize":"13px","edgeLabelBackground":"#F3F4F0"}}}%%
+flowchart LR
+  classDef act fill:#FBE9DF,stroke:#D9531E,color:#1B2430
+  classDef frz fill:#E4ECF5,stroke:#2E5C8A,color:#1B2430
+  classDef out fill:#E3F1E7,stroke:#2F7D4F,color:#1B2430
+
+  HO["read state/handoff.json<br/>+ CLAUDE.md + LESSONS"]:::frz
+  HE["tools/health.py"]:::frz
+  SC["tools/scan.py<br/>roll px · X px · grid overlay → runs/scan_*.jpg"]:::act
+  NX["tools/coverage.py next<br/>→ cell id + xy (new pass when all done)"]:::frz
+  RS["tools/reset_to.py &lt;cell&gt;<br/>UNRECORDED pick → place at cell<br/>bounds-checked · pitch ladder · far tools<br/>exit 0 ≤1.5 cm · 3 off · 6 failed"]:::act
+  EP["tools/episode.py &lt;cell&gt; --technique servo<br/>RECORDED HOME → pick → place on X → HOME<br/>then judge · sidecar · commit<br/>exit 0 committed · 2 budget · 6 no demo"]:::act
+  MK["tools/coverage.py mark &lt;cell&gt;<br/>--episode N --result success|fail<br/>or --hard to defer"]:::frz
+  B{"budget left?<br/>≤ 8 episodes · ≤ 40 min"}:::frz
+  HW["write state/handoff.json<br/>{mode, tape_px, last_cell, in_progress, notes, exit: 2}<br/>git commit tools/ · finish"]:::act
+  LS["state/LESSONS.md<br/>PROPOSALS for unsolved cells"]:::act
+
+  HO --> HE --> SC --> NX
+  NX -- cell --> RS --> EP --> MK --> B
+  B -- yes --> NX
+  B -- no --> HW
+  MK -. hard cell .-> LS
+</pre>
+  </div>
+  <div class="cols" style="margin-top:14px">
+    <div>
+      <h3>Coverage order is fixed, and the factory never finishes</h3>
+      <p>70 start cells on a 4 cm grid, inside the staged reach quad <em>and</em> fully in the top camera's view (60 px margin). Serpentine sweep with a checkerboard interleave, so a half-finished pass still covers the whole workspace at half density. A cell marked <code>--hard</code> is deferred, never dropped: inside the quad, "unreachable" does not exist.</p>
+      <p>When every cell is covered or deferred, <code>coverage.py next</code> starts a new pass: all 70 cells go back to pending and hard cells get another try once per pass. It only prints <code>DONE</code> (→ verdict 0 → HALT) when <code>state/STOP_WHEN_COVERED</code> exists.</p>
+    </div>
+    <div>
+      <h3>What "recorded" means</h3>
+      <p>Frames enter the dataset only while the arm is moving inside <code>Arm.recording(...)</code> in <code>lib/arm.py</code>, and only <code>episode.py</code> opens that block. Resets, probes, recovery drags and technique trials are structurally unable to add frames: no REC badge, nothing to filter out later. Every motion primitive streams 30 Hz interpolated joint goals; each tick sends the goal, reads the servos, grabs both camera frames and appends one row. Thinking pauses (arm stationary) produce no frames, so legs stitch into one continuous episode whose <code>action</code> column is the goal the policy learns to emit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">03</span><h2>One recorded tick — the 30 Hz contract</h2></div>
+  <div class="dia">
+<pre class="mermaid">
+%%{init: {"theme":"base","flowchart":{"curve":"basis","htmlLabels":true},"themeVariables":{"primaryColor":"#E4ECF5","primaryTextColor":"#1B2430","primaryBorderColor":"#2E5C8A","lineColor":"#7C8794","fontFamily":"IBM Plex Sans, sans-serif","fontSize":"13px","edgeLabelBackground":"#F3F4F0"}}}%%
+flowchart LR
+  classDef act fill:#FBE9DF,stroke:#D9531E,color:#1B2430
+  classDef frz fill:#E4ECF5,stroke:#2E5C8A,color:#1B2430
+  classDef sys fill:#E9E9F1,stroke:#6B6F8A,color:#1B2430
+
+  T["tools/technique.py<br/>servo pick (wrist-cam ring at mid descent),<br/>pitch ladders, flat-arm IK for far cells"]:::act
+  TS["TrajStreamer.move(target)<br/>smoothstep goal at tick i"]:::frz
+  SA["robot.send_action(goal)<br/>/dev/serial/by-id/usb-1a86…"]:::sys
+  RD["sync_read Present_Position<br/>→ state[6]"]:::sys
+  CF["camd_client.read_jpeg top, wrist<br/>/dev/shm/so101_camd · dup by seq"]:::sys
+  TR["TickRecorder.on_tick<br/>resize 640×360 · BGR→RGB<br/>ds.add_frame({images, state, action, task})"]:::frz
+  SP["state_pub.publish<br/>/dev/shm/so101_state.json"]:::sys
+  CV["camview :8090<br/>REC badge · action vs state bars · agent feed"]:::sys
+
+  T --> TS --> SA --> RD --> TR
+  CF --> TR
+  RD --> SP --> CV
+</pre>
+  </div>
+  <div class="cap">Measured on this arm: ~3° tracking lag while moving, &lt;0.5° settled; replaying a recorded <code>action</code> column reproduced the motion to 0.1° mean / 0.4° max. Typical episode: 650–800 ticks (22–27 s of motion), 65–140 s to encode.</div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">04</span><h2>File map — who may touch what</h2></div>
+  <p class="lede">Permissions are enforced by <code>.claude/settings.json</code> on the agent's own tools (Read / Edit / Bash). The sortie runs headless in <code>acceptEdits</code> mode, so any Bash command not on the allow list is denied instead of prompted. Badges: <span class="b rw">write</span> agent may Edit/Write directly · <span class="b tool">via tool</span> written only by a script the agent may run · <span class="b ro">read</span> · <span class="b deny">denied</span> · <span class="b sys">system</span> written by daemons or the supervisor.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th></th><th>Path</th><th>What it is</th><th>Agent</th><th>Written by</th></tr></thead>
+    <tbody>
+      <tr class="group"><td colspan="5">~/so101_datagen — act layer (motion strategy, agent-editable, git-tracked)</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/episode.py</code></td><td>Recorded episode from a cell (<code>--technique topdown|servo</code>); then judge → sidecar → commit</td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>agent</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/reset_to.py</code></td><td>Unrecorded reset of the roll to a cell, with landing measurement</td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>agent</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/technique.py</code></td><td>Shared techniques the agent has developed: roll locator guards, pitch ladders, radial table-sag model, flat-arm IK, wrist-camera servo grasp</td><td><span class="b rw">write</span></td><td>agent</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/far_pick.py · far_drag.py · shed.py · nudge.py · right_roll.py</code></td><td>Far-reach grasp, hook-drag recovery of an edge-stranded roll, drop a hooked roll, controlled push, stand a tipped roll up — all unrecorded</td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>agent (s0006–s0011)</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/wrist_cal.py · wrist_servo.json</code></td><td>Wrist-camera ring-to-offset calibration and its stored gain</td><td><span class="b rw">write</span></td><td>agent (s0008)</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/*probe*.py · near_search.py · sim_probe.py · px2xy.py · crop.py · now.py · xtest.py</code></td><td>No-motion probes and helpers the agent wrote while developing technique</td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>agent</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/scan.py</code></td><td>Scene photo with roll, X and grid overlay → <code>runs/scan_*.jpg</code></td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>agent / operator</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/coverage.py</code></td><td>Sole writer of the coverage grid: <code>next</code>, <code>mark</code>, <code>stats</code>; starts new passes</td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>operator; grid file only via it</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>tools/judge.py · health.py · park_safe.py · trace_bounds.py · calibrate_reach.py · run.py · agent_feed.py</code></td><td>Judge · health gate · safe park · workspace tracing · quad staging · run a tool without chmod · live transcript renderer</td><td><span class="b rw">write</span> <span class="b tool">run</span></td><td>operator</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>state/handoff.json</code></td><td>Continuity between sorties and the agent's verdict: <code>{mode, tape_px, last_cell, in_progress, notes, exit}</code></td><td><span class="b rw">write</span></td><td>agent, before exit</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>state/LESSONS.md</code></td><td>Cross-sortie LESSONS and PROPOSALS (kept under 40 lines)</td><td><span class="b rw">edit</span></td><td>agent</td></tr>
+      <tr class="act"><td class="stripe"></td><td class="path"><code>.git/</code></td><td>History of tool improvements (23 commits so far)</td><td><span class="b tool">add · commit · log · diff · revert</span> <span class="b deny">push · reset · checkout · rebase</span></td><td>agent commits, operator reviews</td></tr>
+
+      <tr class="group"><td colspan="5">~/so101_datagen — frozen layer (Edit denied to the agent)</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>CLAUDE.md</code></td><td>The agent's standing orders</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>operator</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>lib/arm.py</code></td><td>Recorded-motion layer: HOME, <code>recording()</code> gate, pick/place_at/plow, gated roll scan (incl. bottom-band fallback), bias update</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>operator</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>lib/record_gate.py</code></td><td>Only commit path: budget check, open/resume dataset, judge ∥ encode, sidecar, index, sortie counter</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>operator</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>lib/bounds.py · lib/frames.py</code></td><td>In-view invariant (<code>check_place_target</code>, 60 px margin) · camera-daemon adapter</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>operator</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>prompts/judge.txt</code></td><td>The one question the judge is asked</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>operator</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>calib/reach_quad.json · calib/home_pose.json</code></td><td>Operator-staged reach quad (4 corner grasps, 0.170 m²) · measured HOME pose off the elbow stop</td><td><span class="b ro">read</span></td><td>operator</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>state/coverage.json</code></td><td>The grid: 70 cells with xy, px, status, attempts, episodes; fixed <code>order</code>; pass counter</td><td><span class="b ro">read</span> <span class="b tool">coverage.py</span> <span class="b deny">direct edit denied</span></td><td>coverage.py only</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>state/sortie.json</code></td><td>Current sortie id, spawn time, committed-episode count (the budget)</td><td><span class="b ro">read</span></td><td>factory.sh at spawn, record_gate on commit</td></tr>
+      <tr class="frz"><td class="stripe"></td><td class="path"><code>factory.sh · systemd/factory.service · .claude/settings.json</code></td><td>Supervisor, its service unit, and the permission rules themselves</td><td><span class="b ro">read</span></td><td>operator</td></tr>
+
+      <tr class="group"><td colspan="5">~/so101_datagen — outputs (append-only; the agent never edits these)</td></tr>
+      <tr class="out"><td class="stripe"></td><td class="path"><code>dataset/so101_place_on_x/</code></td><td>The LeRobotDataset (v3.0), one dataset for the whole factory, resumed per episode</td><td><span class="b deny">denied</span></td><td>record_gate via episode.py</td></tr>
+      <tr class="out"><td class="stripe"></td><td class="path"><code>sidecars/episode_NNNNNN.json</code></td><td>Label + provenance for episode N (schema in 05)</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>record_gate</td></tr>
+      <tr class="out"><td class="stripe"></td><td class="path"><code>judge/episode_NNNNNN.jpg · .json</code></td><td>The 340 px crop the judge saw, and its raw reply</td><td><span class="b ro">read</span> <span class="b deny">denied</span></td><td>judge.py</td></tr>
+      <tr class="out"><td class="stripe"></td><td class="path"><code>state/episodes_index.jsonl</code></td><td>One line per committed episode: index, sortie, cell, label, source, time</td><td><span class="b ro">read</span></td><td>record_gate</td></tr>
+      <tr class="out"><td class="stripe"></td><td class="path"><code>logs/factory.log · logs/sortie_sNNNN.log</code></td><td>Supervisor output; full readable transcript of each sortie</td><td><span class="b ro">read</span></td><td>factory.sh / agent_feed.py</td></tr>
+      <tr class="out"><td class="stripe"></td><td class="path"><code>runs/scan_*.jpg · bounds_*.jpg</code></td><td>Annotated scene photos (not git-tracked)</td><td><span class="b ro">read</span> <span class="b tool">scan.py</span></td><td>scan.py, trace_bounds.py</td></tr>
+
+      <tr class="group"><td colspan="5">~/so101_calibration — the arm stack (other agent's tree; read-only to the sortie)</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>WORKSPACE.md</code></td><td>Arm documentation, hardware truths, sign-offs of steps 01–05</td><td><span class="b ro">read</span></td><td>the other agent</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>episode.py · pick_topdown.py · plow_to_zone.py · traj_stream.py · record_replay.py · state_pub.py · camd_client.py</code></td><td>Step-05 runner (streamed primitives), TopDown aiming brain, plow, 30 Hz streamer, TickRecorder, live-state slot, daemon client</td><td><span class="b ro">read</span></td><td>the other agent; imported by lib/arm.py</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>calib/touch_map.json · x_target.json · disc_grasp_ref.json</code></td><td>Pixel↔world homography (~4 mm), X at px (686, 336), staged grasp offset</td><td><span class="b ro">read</span></td><td>calibration scripts</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>calib/place_bias.json</code></td><td>Damped cross-episode placement correction — the one calibration file the factory <em>updates</em> (after each gated landing)</td><td><span class="b ro">read</span> <span class="b tool">episode.py</span></td><td>lib/arm.update_bias</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>runs/topdown_YYYYMMDD_HHMMSS/</code></td><td>Checkpoint photos per arm process (scene, hover, pregrasp, predrop, landed); path in each sidecar as <code>run_dir</code>. Roughly 10 MB per episode — prune when pulling data.</td><td><span class="b ro">read</span></td><td>TopDown.snap</td></tr>
+
+      <tr class="group"><td colspan="5">Outside both repos</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>/dev/shm/so101_camd/</code></td><td>Camera daemon frame slots: top and wrist, 1280×720 JPEG at 30 fps, seq + timestamp header, atomic replace</td><td><span class="b ro">read via camd_client</span></td><td>systemd user service <code>camd</code></td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>/dev/shm/so101_state.json</code></td><td>Live joint state + commanded action + tag/episode/REC flag, every tick</td><td><span class="b sys">system</span></td><td>whichever process drives the arm</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>/dev/shm/so101_agent.txt</code></td><td>Live transcript of the running sortie: agent narration, every tool call, clipped results, rolling 600 events. Shown at the bottom of camview. Cleared by a reboot.</td><td><span class="b sys">system</span></td><td><code>tools/agent_feed.py</code> fed by factory.sh</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>/dev/serial/by-id/usb-1a86_USB_Single_Serial_5B3E090512-if00</code></td><td>The servo bus (6 Feetech motors). One process at a time.</td><td><span class="b sys">system</span></td><td>—</td></tr>
+      <tr class="sys"><td class="stripe"></td><td class="path"><code>http://192.168.0.29:8090/</code></td><td>camview: both cameras, joints panel with REC badge, and the agent feed</td><td>—</td><td>systemd user service <code>camview</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p><b>Where the fence is soft.</b> The deny rules stop the agent's own Edit tool. A Python script the agent writes under <code>tools/</code> runs with the user's full Unix permissions, so the frozen layer is protected by convention and review, not by the OS. The dataset stays clean because the only code that calls <code>save_episode</code> is <code>lib/record_gate.py</code>, git shows every tool change, and the sidecar records which technique ran.</p>
+    <p><b>Operator to-do — settings.json (the classifier blocks me from editing it).</b> Add to <code>deny</code>: <code>Edit(./state/sortie.json)</code>, <code>Edit(./state/episodes_index.jsonl)</code>, <code>Edit(./calib/**)</code>, <code>Edit(./factory.sh)</code>, <code>Edit(./systemd/**)</code>, <code>Edit(./.claude/**)</code>. The existing <code>Write(...)</code> lines are ignored by Claude Code (only <code>Edit(path)</code> rules match file tools) and can be dropped; their Edit twins already hold the freeze. Consider allowing <code>Bash(chmod +x ./tools/*)</code>; until then a newly written tool runs through <code>./tools/run.py &lt;tool&gt;</code>.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">05</span><h2>Data in, data out</h2></div>
+  <div class="cols">
+    <div>
+      <h3>In — what an episode consumes</h3>
+      <ul>
+        <li><b>Camera frames</b> from the daemon slots: top (fixed overhead, the pixel space every calibration uses) and wrist. Frames older than 0.5 s abort a tick as stale.</li>
+        <li><b>Servo positions</b>, six joints, read every tick over the serial bus.</li>
+        <li><b>Calibration:</b> touch-map homography, X target pixel, staged disc offset, reach quad, HOME pose, place bias, wrist-servo gain.</li>
+        <li><b>State:</b> the coverage grid (which cell), sortie budget, handoff notes, lessons.</li>
+        <li><b>The agent's judgement</b>: which technique, when to rehearse, when to defer.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Out — what the laptop pulls for training</h3>
+      <ul>
+        <li><code>dataset/so101_place_on_x/</code> — the demonstrations (64 MB at 9 episodes).</li>
+        <li><code>sidecars/</code> — labels; the reviewer quarantines <code>label != success</code>.</li>
+        <li><code>judge/</code> — evidence for spot-checking labels.</li>
+        <li><code>state/episodes_index.jsonl</code> — the manifest.</li>
+      </ul>
+<pre>rsync -av protopi5:~/so101_datagen/{dataset,sidecars,judge} ./factory/
+rsync -av protopi5:~/so101_datagen/state/episodes_index.jsonl ./factory/</pre>
+    </div>
+  </div>
+
+  <h3 style="margin:18px 0 10px">Formats</h3>
+  <div class="schema">
+    <div class="box">
+      <h3>Dataset frame (LeRobot v3.0, 30 fps)</h3>
+      <dl>
+        <dt>observation.state</dt><dd>float32[6], measured joints this tick</dd>
+        <dt>action</dt><dd>float32[6], the interpolated goal sent this tick</dd>
+        <dt>observation.images.top</dt><dd>video 360×640×3, h264 ultrafast, crf 30</dd>
+        <dt>observation.images.wrist</dt><dd>video 360×640×3</dd>
+        <dt>task</dt><dd>"pick up the tape roll and place it on the X"</dd>
+        <dt>joint order</dt><dd>shoulder_pan, shoulder_lift, elbow_flex, wrist_flex, wrist_roll, gripper (.pos, degrees / gripper units)</dd>
+      </dl>
+      <p style="font-size:13px;color:var(--mute);margin-top:8px">On disk: <code>data/chunk-000/file-000.parquet</code>, <code>videos/observation.images.&lt;cam&gt;/chunk-000/*.mp4</code>, <code>meta/{info.json, stats.json, tasks.parquet, episodes/}</code>. Read actions without decoding video: <code>ds.select_columns(["action"])</code>.</p>
+    </div>
+    <div class="box">
+      <h3>Sidecar <code>sidecars/episode_NNNNNN.json</code></h3>
+      <dl>
+        <dt>episode_index</dt><dd>matches the dataset's episode index</dd>
+        <dt>sortie_id</dt><dd>sNNNN, or "manual" for supervised runs</dd>
+        <dt>source</dt><dd>collect | dagger</dd>
+        <dt>cell · cell_xy</dt><dd>assigned start cell</dd>
+        <dt>start_px · start_xy</dt><dd>where the roll actually was</dd>
+        <dt>success · label</dt><dd>from the judge's exit code: success | fail | indeterminate</dd>
+        <dt>judge</dt><dd>{exit, verdict{roll_visible, majority_on_x, fraction_on_x, confidence}, model, at}</dd>
+        <dt>landed_px · dist_cm_metric</dt><dd>vision estimate of landing vs X — advisory only</dd>
+        <dt>grasp_stall</dt><dd>gripper reading when the jaws stalled (≥ 9 = held)</dd>
+        <dt>technique · agent_note</dt><dd>topdown | servo, and what the agent chose to record</dd>
+        <dt>duration_s · n_ticks · dups · encode_s</dt><dd>wall time incl. pauses · frames · duplicate frames per cam · video encode time</dd>
+        <dt>run_dir</dt><dd>checkpoint photo folder in the arm stack</dd>
+      </dl>
+    </div>
+    <div class="box">
+      <h3>Coverage cell <code>state/coverage.json</code></h3>
+      <dl>
+        <dt>xy</dt><dd>FK/world metres, the space aiming works in</dd>
+        <dt>px</dt><dd>advisory top-camera pixel (1280×720)</dd>
+        <dt>status</dt><dd>pending | covered | hard</dd>
+        <dt>attempts · successes · episodes</dt><dd>bookkeeping; <code>meta.pass</code> counts full passes, <code>hard_passes</code> how often a cell resisted</dd>
+      </dl>
+      <h3 style="margin-top:12px">Live slot <code>/dev/shm/so101_state.json</code></h3>
+      <dl>
+        <dt>state · action</dt><dd>6 joints each</dd>
+        <dt>tag</dt><dd>episode | rehearse | reset | plow | idle | home | …</dd>
+        <dt>recording · episode · frame</dt><dd>REC flag, label, frame count</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">06</span><h2>Labels, budgets, and the fences that hold them</h2></div>
+  <div class="cols">
+    <div>
+      <h3>The judge has no context on purpose</h3>
+      <p><code>tools/judge.py</code> crops 340 px around the saved X from a fresh daemon frame (the arm is HOME and clear), writes it to a temp directory, and runs a separate <code>claude -p</code> there with model claude-sonnet-5, Read as its only tool, and the fixed question in <code>prompts/judge.txt</code>. The temp cwd means no project CLAUDE.md, no memory, no history of the episode — it only sees the picture. Exit 0 = majority of the roll's footprint on the X, 3 = not, 4 = could not tell. The executor cannot override it. Every label so far has matched its photo on inspection.</p>
+      <p>Failed-but-completed placements are still committed, labelled <code>fail</code>: they are diagnostic and future DAgger seeds. Episodes with no demonstration (grasp never held, placement never ran) are discarded before the dataset sees them.</p>
+    </div>
+    <div>
+      <h3>Sortie budget and safety halts</h3>
+      <div class="tw"><table>
+        <thead><tr><th>Limit</th><th>Value</th><th>Enforced by</th></tr></thead>
+        <tbody>
+          <tr><td>Episodes per sortie</td><td class="num">8</td><td><code>record_gate.check_budget</code> before recording and at commit</td></tr>
+          <tr><td>Sortie age to start an episode</td><td class="num">40 min</td><td>same, from <code>sortie.json spawned_at</code></td></tr>
+          <tr><td>Hard kill</td><td class="num">55 min</td><td><code>timeout -s KILL 3300</code> in factory.sh</td></tr>
+          <tr><td>Agent turns</td><td class="num">200</td><td><code>--max-turns</code></td></tr>
+          <tr><td>Consecutive stalls (verdict 3)</td><td class="num">2</td><td>factory.sh → HALT</td></tr>
+          <tr><td>Crashes (other exit)</td><td class="num">3</td><td>factory.sh → HALT</td></tr>
+          <tr><td>Consecutive sorties with no episode</td><td class="num">3</td><td>factory.sh → HALT (a factory that runs but commits nothing)</td></tr>
+          <tr><td>Account usage limit</td><td>—</td><td>factory.sh sleeps 15 min and retries; not a crash</td></tr>
+          <tr><td>Health</td><td>RAM &gt; 400 MB · disk &gt; 2 GB · no live throttle · fresh frames</td><td><code>health.py</code> before every sortie; agent exits 5</td></tr>
+          <tr><td>Reboot / supervisor crash</td><td>—</td><td>systemd restarts the service in 30 s; a sortie in flight is lost, its uncommitted work discarded</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="note blue">
+    <p><b>Doctrines baked into the tools.</b> The reach quad is ground truth: any cell inside it is possible and "unreachable" is never a terminal state. Every place, drop or plow target passes <code>lib/bounds.check_place_target</code> so the roll never leaves the camera frame; if it does, recovery precedes all other work. Success is judged visually, at "majority on the X", not by centimetres. The arm's own encoder-FK space is used on both sides of every reachability test, so systematic model error cancels.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section>
+  <div class="sec-head"><span class="num">07</span><h2>Status at this revision</h2></div>
+  <div class="status">
+    <div class="k"><b>9</b><span>episodes committed: 7 success, 2 fail, 6 995 frames; labels spot-checked against judge photos</span></div>
+    <div class="k"><b>~5 min</b><span>per episode once a cell is in the proven regime; about $2 per demonstration in sorties s0008–s0010 (vs $9 for none while technique was being invented)</span></div>
+    <div class="k"><b>7 · 2 · 61</b><span>cells covered · hard (deferred: c000, c004) · pending, pass 1</span></div>
+    <div class="k"><b>s0012</b><span>running since 21:06 under systemd. The Pi rebooted at 20:50 mid-s0011 (cause unknown, no persistent journal); the nohup'd supervisor did not return, hence the service.</span></div>
+  </div>
+  <h3 style="margin:18px 0 8px">Watching it run</h3>
+<pre>http://192.168.0.29:8090/                            # cameras, REC badge, live agent transcript
+systemctl --user status factory                      # supervisor up?
+cat  ~/so101_datagen/state/sortie.json               # episodes committed this sortie
+~/so101_datagen/tools/coverage.py stats              # grid progress
+tail ~/so101_datagen/state/episodes_index.jsonl     # committed episodes
+tail -f ~/so101_datagen/logs/sortie_s0012.log       # a sortie's transcript
+touch ~/so101_datagen/state/HALT                    # stop after this sortie</pre>
+  <h3 style="margin:18px 0 8px">How the agent has behaved</h3>
+  <ul>
+    <li><b>s0002</b> fought the first far cell, found the red-X-as-roll detector bug, fixed it in tools, wrote lessons and proposals, handed off with nothing committed.</li>
+    <li><b>s0006</b> built the far-reach toolkit from your four staged corner grasps, pushed the roll half out of frame with a miss, recovered it with a hook-drag it wrote on the spot, deferred c000 as hard, and committed the first two factory episodes.</li>
+    <li><b>s0007</b> missed a grasp, tipped the roll onto its side at the frame edge, and spent the sortie on righting tools — the one sortie that ended worse than it started.</li>
+    <li><b>s0008</b> righted the roll in six minutes, added the wrist-camera servo grasp, and went 3 for 3 on grasps; the place bias then converged (1.9 cm short → 0.2 cm).</li>
+    <li><b>s0010</b> deferred c004 quickly instead of grinding, then ran three clean successes at five-minute intervals.</li>
+    <li>No sortie has touched a frozen file, a connector tool, or the dataset outside the gate. Every handoff has been honest about failures.</li>
+  </ul>
+</section>
+
+</div>
+
+<!--claude-mermaid-runtime-begin:3477-->
+<style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
+<script src="/_runtime/mermaid-11.16.1.min.js"></script>
+<script>(function(){
+var CFG={"palettes":{"light":{"surface":"#f4efe4","text":"#42392e","line":"#8a7f6d","border":"#7a6c52","bg":"#fffdf8"},"dark":{"surface":"#262b34","text":"#f2f3f5","line":"#a8adb8","border":"#9aa4b8","bg":"#1f232b"}}};
+if(typeof mermaid==='undefined')return;
+var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
+if(!pres.length)return;
+var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+var root=document.documentElement;
+var items=pres.map(function(pre){
+var mount=document.createElement('div');mount.className='mermaid-diagram';
+return {pre:pre,mount:mount,src:pre.textContent||''};
+});
+var seq=0;
+var renderGen=0;
+var lastKey='';
+function pageBg(fallback){
+var els=[document.body,document.documentElement];
+for(var i=0;i<els.length;i++){
+var c=els[i]&&getComputedStyle(els[i]).backgroundColor;
+if(c&&c!=='transparent'&&c!=='rgba(0, 0, 0, 0)')return c;
+}
+return fallback;
+}
+function render(){
+var theme=root.getAttribute('data-theme');
+var dark=theme==='dark'||(!!(mq&&mq.matches)&&theme!=='light');
+var pal=dark?CFG.palettes.dark:CFG.palettes.light;
+var bg=pageBg(pal.bg);
+var key=(dark?'d':'l')+'|'+bg;
+if(key===lastKey)return;
+lastKey=key;
+var gen=++renderGen;
+var font=getComputedStyle(document.body).fontFamily||'sans-serif';
+var nat={useMaxWidth:false};
+mermaid.initialize({
+startOnLoad:false,securityLevel:'strict',theme:'base',
+flowchart:nat,sequence:nat,er:nat,state:nat,class:nat,pie:nat,
+gantt:nat,journey:nat,timeline:nat,gitGraph:nat,mindmap:nat,xyChart:nat,
+quadrantChart:nat,sankey:nat,c4:nat,requirement:nat,block:nat,
+packet:nat,kanban:nat,architecture:nat,radar:nat,
+themeVariables:{background:bg,mainBkg:pal.surface,primaryColor:pal.surface,
+primaryTextColor:pal.text,lineColor:pal.line,primaryBorderColor:pal.border,
+nodeBorder:pal.border,clusterBorder:pal.border,edgeLabelBackground:bg,
+clusterBkg:'rgba(127,127,127,0.07)',titleColor:pal.text,
+darkMode:dark,rowOdd:bg,rowEven:'rgba(127,127,127,0.07)',
+attributeBackgroundColorOdd:bg,attributeBackgroundColorEven:'rgba(127,127,127,0.07)',
+fontSize:'16px',fontFamily:font},
+themeCSS:'.node rect, .node circle, .node polygon, .node path, .cluster rect { stroke-width: 2px; }'
+});
+items.forEach(function(it){
+var id='claude-mermaid-'+seq++;
+mermaid.render(id,it.src).then(function(r){
+if(gen!==renderGen)return;
+var prev=it.pre.previousElementSibling;
+if(prev&&prev.className==='mermaid-diagram'&&prev!==it.mount)return;
+it.mount.innerHTML=r.svg;
+if(!it.mount.parentNode)it.pre.parentNode.insertBefore(it.mount,it.pre);
+it.pre.style.display='none';
+},function(){
+var scratch=document.getElementById(id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+scratch=document.getElementById('d'+id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+if(gen!==renderGen)return;
+if(it.mount.parentNode)it.mount.parentNode.removeChild(it.mount);
+it.pre.style.display='';
+});
+});
+}
+render();
+if(mq&&mq.addEventListener)mq.addEventListener('change',render);
+if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();</script>
+<!--claude-mermaid-runtime-end-->
+
+</body></html>

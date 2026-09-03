@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proto-Town Artifact Archive</title>
+<style>
+:root{
+  --bg:#f4f4f1; --panel:#fbfbf9; --ink:#20241f; --muted:#68706a; --line:#d7d9d2;
+  --acc:#3d6b52;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#181b19; --panel:#20241f; --ink:#e5e7e2; --muted:#98a09a; --line:#333831; --acc:#7fb597;}}
+:root[data-theme="dark"]{
+  --bg:#181b19; --panel:#20241f; --ink:#e5e7e2; --muted:#98a09a; --line:#333831; --acc:#7fb597;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Charter,Georgia,serif}
+main{max-width:44rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:0 0 .5rem}
+h1{font-size:1.8rem;line-height:1.15;margin:0 0 .4rem;text-wrap:balance}
+.sub{color:var(--muted);margin:0 0 2rem;font-size:.98rem}
+h2{font-size:1.05rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:2.4rem 0 .6rem;border-bottom:1px solid var(--line);padding-bottom:.3rem}
+ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem}
+li{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:.65rem .9rem}
+li a{color:var(--ink);font-weight:700;text-decoration:none}
+li a:hover{color:var(--acc);text-decoration:underline}
+li .d{display:block;color:var(--muted);font-size:.88rem;margin-top:.12rem}
+li .m{font-family:var(--mono);font-size:.72rem;color:var(--muted);float:right}
+.note{border-left:3px solid var(--acc);background:var(--panel);padding:.55rem .9rem;border-radius:0 4px 4px 0;font-size:.92rem;margin-top:2.2rem;color:var(--muted)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style></head><body>
+<main>
+<p class="eyebrow">Proto-Town · AI in Physical Space</p>
+<h1>Artifact Archive</h1>
+<p class="sub">Design notes, session reports, and audits from the Proto-Town embodiment project — consolidated from claude.ai artifacts across accounts into one static archive.</p>
+
+<h2>SO-101 arm · policy &amp; control</h2>
+<ul>
+<li><span class="m">2026-09-03</span><a href="overlap-ensemble-act.html">Overlap-Ensemble ACT on the Pi</a><span class="d">Pipelined chunk inference with a freshness-weighted fade-in ensemble; α-sweep field results and the disagreement-gated controller.</span></li>
+</ul>
+
+<h2>SO-101 arm · data factory</h2>
+<ul>
+<li><span class="m">2026-09-03</span><a href="so101-data-factory.html">SO101 Data Factory</a><span class="d">The collect→curate→train→DAgger loop: camera daemon, record gating, build sequence, open decisions. Includes embedded demo video.</span></li>
+<li><span class="m">2026-09-01</span><a href="so101-factory-wiring.html">SO101 Factory Wiring</a><span class="d">System reference: supervisor loop, sortie internals, the 30 Hz recorded-tick contract, file permissions map, data formats.</span></li>
+<li><span class="m">2026-09-02</span><a href="so101-speed-loop.html">SO101 Speed Loop</a><span class="d">Plan, as built: a reviewer agent tunes a 3-minute executor until the arm runs pick-and-place fast from anywhere.</span></li>
+<li><span class="m">2026-09-02</span><a href="speed-loop-session-one.html">Speed Loop Session One</a><span class="d">Results of the first tuning session: 77→68 s median, the speed split, push detection, and what did not improve.</span></li>
+</ul>
+
+<h2>Gantry era · analyses</h2>
+<ul>
+<li><span class="m">2026-08-17</span><a href="evidence-chains.html">Proto-Town — Evidence Chains</a><span class="d">Six verbatim evidence chains from the run transcripts: false beliefs born, encoded, inherited, and collapsed.</span></li>
+<li><span class="m">2026-08-10</span><a href="behavior-ledger.html">Behavior Ledger — laws2-loop1</a><span class="d">Evidence-cited audit of one autonomous run, with blind cross-checks run against the author's own bias.</span></li>
+<li><span class="m">2026-08-05</span><a href="project-history.html">Proto-Town: Project History</a><span class="d">How an AI comes to perceive, model, and act on physical space — exp-001 and exp-002, fully cited.</span></li>
+</ul>
+
+<h2>Business development</h2>
+<ul>
+<li><span class="m">2026-08-26</span><a href="sbir-coverage-audit.html">SBIR Coverage Audit</a><span class="d">Every site that posts open SBIR/STTR topics, what each tool can pull from it, and the build spec to close the gaps.</span></li>
+</ul>
+
+<p class="note">Not yet archived (owned by the second claude.ai account): <em>Start-Point Range</em>, <em>SO101 Factory Wiring</em> (earlier variant), <em>Claude touches three rolls of tape</em>. Log into that account in a Claude Code session and re-run the mirror step in the README.</p>
+</main>
+</body></html>

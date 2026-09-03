@@ -1,0 +1,628 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><title>Proto-Town: Project History</title></head><body>
+
+<style>
+  :root {
+    --bg: #EAEDEF;
+    --paper: #F6F7F8;
+    --ink: #171E27;
+    --ink-soft: #3A4450;
+    --muted: #5C6773;
+    --line: #D3D9DC;
+    --line-soft: #E2E7E9;
+    --accent: #2B5B8C;
+    --accent-soft: #E4ECF3;
+    --accent-ink: #17395B;
+    --good: #1E7A4C;
+    --good-soft: #E4F2EA;
+    --bad: #A23B2E;
+    --bad-soft: #F6E8E5;
+    --warn: #8A6212;
+    --warn-soft: #F2EBD8;
+    --serif: Iowan Old Style, "Sitka Text", "Source Serif 4", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161B; --paper: #171C22; --ink: #E8EBEE; --ink-soft: #C3CBD2; --muted: #8B96A1;
+      --line: #2C333B; --line-soft: #232A31;
+      --accent: #6FA3D6; --accent-soft: #1C2C3B; --accent-ink: #A9CBE9;
+      --good: #4FAE7C; --good-soft: #16261E;
+      --bad: #E08874; --bad-soft: #2C1D1A;
+      --warn: #D6AE55; --warn-soft: #2A2313;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12161B; --paper: #171C22; --ink: #E8EBEE; --ink-soft: #C3CBD2; --muted: #8B96A1;
+    --line: #2C333B; --line-soft: #232A31;
+    --accent: #6FA3D6; --accent-soft: #1C2C3B; --accent-ink: #A9CBE9;
+    --good: #4FAE7C; --good-soft: #16261E;
+    --bad: #E08874; --bad-soft: #2C1D1A;
+    --warn: #D6AE55; --warn-soft: #2A2313;
+  }
+  :root[data-theme="light"] {
+    --bg: #EAEDEF; --paper: #F6F7F8; --ink: #171E27; --ink-soft: #3A4450; --muted: #5C6773;
+    --line: #D3D9DC; --line-soft: #E2E7E9;
+    --accent: #2B5B8C; --accent-soft: #E4ECF3; --accent-ink: #17395B;
+    --good: #1E7A4C; --good-soft: #E4F2EA;
+    --bad: #A23B2E; --bad-soft: #F6E8E5;
+    --warn: #8A6212; --warn-soft: #F2EBD8;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    max-width: 78ch;
+    margin: 0 auto;
+    padding: 4.5rem 1.5rem 2.5rem;
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.1rem;
+  }
+  .kicker::before {
+    content: "";
+    width: 22px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  h1.title {
+    font-size: clamp(2rem, 5vw, 2.85rem);
+    font-weight: 600;
+    line-height: 1.12;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    line-height: 1.5;
+    text-wrap: balance;
+    margin: 0 0 1.6rem;
+    max-width: 60ch;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.2rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+  .meta-row b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- toc ---------- */
+  .toc-wrap {
+    max-width: 78ch;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+  .toc {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1.4rem 1.6rem;
+  }
+  .toc-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.9rem;
+  }
+  .toc ol {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.94rem;
+  }
+  .toc a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: flex;
+    gap: 0.7rem;
+  }
+  .toc a:hover { color: var(--accent); }
+  .toc .n {
+    font-family: var(--mono);
+    color: var(--muted);
+    min-width: 1.4rem;
+  }
+
+  /* ---------- article body ---------- */
+  article {
+    max-width: 68ch;
+    margin: 0 auto;
+    padding: 0 1.5rem 6rem;
+  }
+  section { margin-top: 3.4rem; }
+  section:first-of-type { margin-top: 0; }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    text-wrap: balance;
+  }
+  h2 .num {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  h3 {
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin: 2rem 0 0.8rem;
+    color: var(--ink);
+  }
+  h3 .num { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); font-weight: 500; margin-right: 0.4rem; }
+
+  p { margin: 0 0 1.05rem; }
+  strong { font-weight: 650; color: var(--ink); }
+  em { font-style: italic; }
+
+  blockquote {
+    margin: 1.4rem 0;
+    padding: 0.9rem 1.3rem;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 3px 3px 0;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  blockquote p:last-child { margin-bottom: 0; }
+
+  cite {
+    font-style: normal;
+    font-family: var(--mono);
+    font-size: 0.76em;
+    color: var(--muted);
+    background: var(--line-soft);
+    padding: 0.05em 0.42em;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  ul, ol { padding-left: 1.3rem; margin: 0 0 1.05rem; }
+  li { margin-bottom: 0.45rem; }
+  li::marker { color: var(--muted); }
+
+  .tablewrap { overflow-x: auto; margin: 1.4rem 0; border: 1px solid var(--line); border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; font-family: var(--serif); }
+  th, td { text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  thead th { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: var(--paper); font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--paper); }
+  td:has(> .num-cell), .num-cell { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 0.88em; }
+
+  /* ---------- evidence tags ---------- */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    padding: 0.14em 0.55em;
+    border-radius: 999px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .tag.verified { background: var(--good-soft); color: var(--good); }
+  .tag.retracted { background: var(--bad-soft); color: var(--bad); }
+  .tag.open { background: var(--warn-soft); color: var(--warn); }
+  .tag::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  .callout {
+    margin: 1.5rem 0;
+    padding: 1.1rem 1.3rem;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .callout.contradiction { border-color: color-mix(in srgb, var(--bad) 35%, var(--line)); }
+  .callout.contradiction .callout-label { color: var(--bad); }
+  .callout.finding { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  .callout.finding .callout-label { color: var(--accent); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+  .stat {
+    background: var(--paper);
+    padding: 0.95rem 1.1rem;
+  }
+  .stat .v {
+    font-family: var(--mono);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+  .stat .l {
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  hr.rule { border: none; border-top: 1px solid var(--line); margin: 3rem 0; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--line-soft);
+    padding: 0.05em 0.35em;
+    border-radius: 3px;
+  }
+
+  .appendix {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .appendix h3 { font-size: 0.95rem; margin-top: 1.6rem; color: var(--muted); font-family: var(--mono); letter-spacing: 0.02em; text-transform: uppercase; font-size: 0.72rem; }
+  .appendix code { font-size: 0.82em; }
+
+  footer.colophon {
+    max-width: 68ch;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 5rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-family: var(--mono);
+    border-top: 1px solid var(--line);
+  }
+
+  ::selection { background: var(--accent-soft); color: var(--accent-ink); }
+</style>
+
+<div class="masthead">
+  <p class="kicker">Reference document · compiled 2026-08-05</p>
+  <h1 class="title">Proto-Town: How an AI Comes to Perceive, Model, and Act on Physical Space</h1>
+  <p class="subtitle">A comprehensive, evidence-backed history of the project through exp-001 and exp-002. Every claim is cited to a source file. Where sources disagree or a claim could not be verified, that is stated rather than resolved by fiat.</p>
+  <div class="meta-row">
+    <span><b>Scope</b> exp-001 raw run + retrospective + demo production, exp-002 World Mirror through first subject session</span>
+    <span><b>Sources</b> full repository contents, project memory, git history</span>
+  </div>
+</div>
+
+<div class="toc-wrap">
+  <nav class="toc">
+    <p class="toc-label">Contents</p>
+    <ol>
+      <li><a href="#abstract"><span class="n">—</span> Abstract</a></li>
+      <li><a href="#s1"><span class="n">01</span> Mission and Motivating Question</a></li>
+      <li><a href="#s2"><span class="n">02</span> exp-001: &ldquo;Find Blue Tape&rdquo; — the Raw Run</a></li>
+      <li><a href="#s3"><span class="n">03</span> exp-001&rsquo;s Retrospective: a 12-Agent Overnight Analysis</a></li>
+      <li><a href="#s4"><span class="n">04</span> The Afternoon Demo Production</a></li>
+      <li><a href="#s5"><span class="n">05</span> exp-002: &ldquo;The World Mirror&rdquo;</a></li>
+      <li><a href="#s6"><span class="n">06</span> Cross-Cutting Findings</a></li>
+      <li><a href="#s7"><span class="n">07</span> Current State and Next Steps</a></li>
+      <li><a href="#appendix"><span class="n">—</span> Source Index</a></li>
+    </ol>
+  </nav>
+</div>
+
+<article>
+
+<section id="abstract">
+<h2><span class="num">§</span>Abstract</h2>
+<p>Proto-Town gives Claude control of a small 3-axis motion platform (a Grbl-based gantry) and two or more cameras, and asks a deceptively simple question: <em>how does an AI build a trustworthy model of a physical space it can only perceive through cheap, lying sensors, and how does it recover when those sensors mislead it?</em> Two experiments have run so far. <strong>exp-001</strong> (&ldquo;find blue tape,&rdquo; 2026&#8209;08&#8209;03&ndash;04) tasked Claude with locating tape and then physically touching three colored rolls; it succeeded at the vision-servo tasks cleanly, produced one cleanly-verified physical touch, and generated three separate false-positive contact claims before the session ended &mdash; followed by an unusually rigorous 12-agent overnight retrospective that re-examined the raw evidence and produced a ranked slate of follow-up tests and four architecture recommendations. <strong>exp-002</strong> (&ldquo;The World Mirror,&rdquo; 2026&#8209;08&#8209;04) changed the question: instead of measuring task success, it sent a <em>blind</em> Claude &mdash; deliberately stripped of all prior project memory and environment-specific knowledge &mdash; to explore the same rig from scratch and build an explicit, evidence-cited map of its own beliefs, so the operator could later find and diagnose exactly where its understanding diverged from reality. That subject session completed, producing a 10-object, 17-belief world model with 5 formally retracted beliefs and a self-reported 29% false-positive rate; the operator-side comparison against ground truth &mdash; the actual &ldquo;diagnose the gap&rdquo; payoff the experiment was built for &mdash; has not yet been run.</p>
+</section>
+
+<section id="s1">
+<h2><span class="num">01</span>Mission and Motivating Question</h2>
+<p>The project&rsquo;s own framing, recorded during exp-001&rsquo;s retrospective planning and treated as the standing mission statement for all analysis since:</p>
+<blockquote><p>&ldquo;Proto-Town is an experiment in how an AI system comes to perceive, model, and reliably act on physical space &mdash; and how the operator manages and guides that system as it evolves. The tape-touching tasks are probes. The real variables: how an LLM builds a grounded world model from cheap sensors, how it recovers when instruments lie, how fast it adapts across sessions, and which scaffolding (memory, verification discipline, architecture) closes the embodiment gap versus becoming the bottleneck.&rdquo; <cite>retro/PLAN.md</cite></p></blockquote>
+<p>Going into exp-001&rsquo;s retrospective, the operator&rsquo;s own dissatisfactions with that session were recorded verbatim as the standard every subsequent proposal had to answer to:</p>
+<ul>
+  <li>&ldquo;Execution was painfully slow and unreliable.&rdquo;</li>
+  <li>&ldquo;Claude made critical false assumptions and did not take exploratory/discovery action to verify (e.g., never moved around to get different viewing angles).&rdquo;</li>
+  <li>&ldquo;Over-reliance on scripts; lack of creativity; never scanned the workspace to build a spatial representation it could actually reason over.&rdquo;</li>
+  <li>&ldquo;Wanted: creativity, unconventional approaches, research; agents must not get stuck on one approach/problem.&rdquo; <cite>retro/PLAN.md</cite></li>
+</ul>
+<p>This framing matters for reading everything below: the project is not trying to optimize touch-accuracy. It is using touch-accuracy failures as a window into a harder question &mdash; whether the agent explores to reduce uncertainty, or just executes the first plausible plan and trusts it. That question is what shaped exp-002&rsquo;s entire design, and it remains the throughline connecting both experiments.</p>
+</section>
+
+<section id="s2">
+<h2><span class="num">02</span>exp-001: &ldquo;Find Blue Tape&rdquo; &mdash; the Raw Run</h2>
+
+<h3><span class="num">2.1</span>Task and hardware</h3>
+<p>The task began narrowly &mdash; &ldquo;Using only camera input, locate two pieces of blue tape on the workspace. Loop/iterate until success&rdquo; <cite>log.md</cite> &mdash; and was formalized as an image-space goal (<code>goal.json</code>: target centroid, area, and tolerance derived from an operator-demonstrated photo, deliberately specified in image pixels rather than machine coordinates, &ldquo;because hand-moving the axes made Grbl&rsquo;s counters meaningless anyway&rdquo; <cite>log.md</cite>). The operator subsequently expanded the task live, in stages: center on tape #2, touch a transparent cup, touch a black tape roll, then touch all three rolls (black, red, blue) <cite>log.md</cite>.</p>
+<p>Hardware: an unmarked 3018-style CNC gantry board (ATmega328P&nbsp;+&nbsp;CH340 USB-serial, Grbl&nbsp;1.1f firmware, no limit/homing switches), a Raspberry&nbsp;Pi&nbsp;5 hosting a TCP control server and two cameras &mdash; a head-mounted Arducam&nbsp;16MP (UVC, oblique-down view) and a beam-mounted OV9782 global-shutter camera &mdash; and a springy red wire hanging from the head as the physical probe/stylus <cite>retro/EVIDENCE_INDEX.md</cite> <cite>memory/proto-town-hardware.md</cite>.</p>
+
+<h3><span class="num">2.2</span>What worked, verified against raw logs</h3>
+<p>Two tasks in this experiment have clean, independently-checkable success evidence in raw JSON step logs, not just narrative claims:</p>
+<ul>
+  <li><span class="tag verified">verified</span>&nbsp; <strong>Tape #1 located and centered</strong>: after two failed attempts (<code>phase3_run.log</code>, <code>phase3_run2.log</code>) blocked by a false stall poisoning the script&rsquo;s &ldquo;blocked-ledger&rdquo; safety mechanism, the third attempt converged in 10 servo iterations to a final blob area of 120,809px&sup2; against a goal of 156,994px&sup2; (within the &plusmn;25% tolerance), final machine position <code>[40.16, 20.0, 43.05]</code> <cite>phase3_run3.log</cite>.</li>
+  <li><span class="tag verified">verified</span>&nbsp; <strong>Tape #2 located and centered</strong>: converged in 19 iterations to (1081.5, 436.4) against goal (1050, 468), area 119,675px&sup2; (within tolerance), surviving a mid-servo occlusion event where the tracked blob&rsquo;s area transiently collapsed and recovered without losing target identity <cite>phase4_run.log</cite>.</li>
+  <li><span class="tag verified">verified</span>&nbsp; <strong>Black roll physically touched</strong>: on the second attempt of a three-roll touch campaign (the first died to a Pi network outage mid-navigation with zero touches, <code>phase7_run.log</code>), a deflection-growth contact signal rose cleanly across three steps &mdash; 22.0&nbsp;&rarr;&nbsp;51.0&nbsp;&rarr;&nbsp;81.1&nbsp;px &mdash; triggering a contact declaration at 10mm approach depth <cite>phase7_run2.log</cite>.</li>
+</ul>
+
+<h3><span class="num">2.3</span>What failed &mdash; the false contacts, each with its own distinct root cause</h3>
+<p>The session produced <strong>three separate false-positive contact declarations on the red roll</strong>, each caught only after the fact, each with a genuinely different underlying cause &mdash; which is itself the retrospective&rsquo;s central finding (§3.4 below):</p>
+<ol>
+  <li><span class="tag retracted">false positive</span>&nbsp; <code>phase7_red.py</code>: a contact-deflection signal spiked to 577.8px, then <em>decayed monotonically</em> for 15 subsequent steps before climbing again and triggering a declaration at 479.5px/52mm depth <cite>phase7_red.log</cite>. Root cause: the wire-tip segmenter had latched onto the red roll itself (a &ldquo;red-on-red&rdquo; color-detection confusion) and was tracking pure camera ego-motion, not the wire <cite>log.md</cite>.</li>
+  <li><span class="tag retracted">false positive</span>&nbsp; <code>phase8_touch.py</code>: a &ldquo;push&rdquo; contact channel (residual motion vs. a self-calibrated ego-motion baseline) triggered a declaration at 91.1px/12mm, attributed in the source narrative to the same ego-motion/field-of-view-clipping artifact family <cite>phase8_red.log</cite> <cite>log.md</cite>.</li>
+  <li><span class="tag retracted">false positive</span>&nbsp; <code>phase9_red.py</code>: a contact-residual signal grew to 368.3px &mdash; but in the <em>same log</em>, the tracked blob&rsquo;s <code>area</code> field simultaneously collapsed from 81,082 to 10,415&nbsp;px&sup2; over the identical steps, which is the log&rsquo;s own evidence that the roll was clipping out of the camera&rsquo;s field of view, not being physically pushed <cite>phase9_red.log</cite>. This false contact led to the diagnosis of the session&rsquo;s deepest root cause: a <strong>stale tip-calibration constant</strong>. The tip pixel used throughout was hardcoded at (1049, 440); a live recalibration in the very next script measured the true tip position at (1210, 485) &mdash; a roughly 167-pixel error, caused by the wire physically deforming after the earlier black-roll contacts <cite>phase10_red.log</cite> <cite>log.md</cite>.</li>
+</ol>
+<p>There was also an earlier, separately-caused false contact during the cup-touching sub-task: a template-tracker match score had been decaying steadily (0.985&nbsp;&rarr;&nbsp;0.828) over 14 prior steps before a 284.5px &ldquo;displacement&rdquo; triggered a contact declaration at 24mm &mdash; a template-matching artifact from background contamination in the tracked patch, not real contact. The operator caught this one manually and had to lower the probe further by hand before real contact occurred <cite>phase5b_run.log</cite> <cite>log.md</cite>.</p>
+<p><code>phase10_red.py</code>&rsquo;s live-recalibration fix, meant to close out the red-roll problem, itself failed on its only logged run (<code>{"FAIL": "lost blob during align"}</code>) <cite>phase10_red.log</cite>.</p>
+
+<h3><span class="num">2.4</span>The next morning: iteration 26, and an important evidentiary caveat</h3>
+<p>After an overnight workspace reset and Pi reboot, the session resumed on 2026-08-04 morning as a direct continuation (not a separate effort &mdash; see §4 for how this was confirmed), applying lessons from the overnight retrospective (§3). Three scripts ran: <code>m1_survey.py</code> (a 3&times;3 grid survey), <code>m2_black.py</code> (automated black-roll approach), <code>m4_red.py</code> (automated red-roll approach). Notably, there is no <code>m3_*.py</code> script and no automated blue-roll script at all.</p>
+<ul>
+  <li><strong><code>m1_survey.py</code></strong> reported empty detections (<code>hits: {}</code>) at all 9 survey points. This was diagnosed as a pure software bug, not a vision failure: the script read the response key <code>resp["blob"]</code>, but the server&rsquo;s <code>color_blob</code> handler returns the key <code>"blobs"</code> (plural) &mdash; confirmed directly against <code>server_v3.py</code>&rsquo;s source <cite>m1_survey.log</cite> <cite>log.md</cite> <cite>server_v3.py</cite>.</li>
+  <li><strong><code>m2_black.py</code></strong>&rsquo;s automated navigation loop never converged (<code>{"FAIL": "nav did not converge"}</code> after 12 iterations) &mdash; but the black roll was touched <em>anyway</em>, by accident, when the wire dragged across it during the failed navigation, and this was verified manually via a second-camera side view <cite>m2_black.log</cite> <cite>log.md</cite>.</li>
+  <li><strong><code>m4_red.py</code></strong>&rsquo;s contact-sensing band degraded as the approach progressed (its tracked pixel count collapsed from ~6,900 to 927) and the log ends with <strong>no contact conclusion at all</strong> &mdash; the automated approach was abandoned mid-run <cite>m4_red.log</cite>.</li>
+  <li><strong>Blue roll never got an automated script</strong>: blue color detection was reportedly blind under the workspace&rsquo;s green light cast, so the approach went straight to manual/interactive control <cite>log.md</cite>.</li>
+</ul>
+<div class="callout finding">
+  <p class="callout-label">Evidentiary caveat</p>
+  <p>The session&rsquo;s own final claim reads: <em>&ldquo;Task complete: black, red, blue all touched with verified evidence, ~2.5h, zero false-contact reports, zero operator interventions&rdquo;</em> <cite>log.md</cite>. The black-roll touch and both tape-centering tasks have clean, independently-checkable raw JSON evidence. The morning&rsquo;s red and blue touches do <strong>not</strong> &mdash; they were completed through interactive, manual command sequences (frame-checkpoint sets referred to in the source as <code>m3</code>, <code>m5</code>, <code>m6</code>, <code>m7</code>) that were <strong>never written to a machine-readable run log</strong>, only to narrative description and photographs. The source material flags this itself as a protocol gap. This document treats the black-roll touch and both tape-centering tasks as verified, and the red/blue morning touches as <em>claimed but not independently machine-verifiable</em>.</p>
+</div>
+
+<h3><span class="num">2.5</span>Hardware incidents during the session</h3>
+<p>Two axis-grinding stops (caught by the operator, since the rig has no limit switches), one silent USB-serial disconnect that was misdiagnosed as a dead Z-axis before being correctly identified as a communication failure, three Pi network drops (two of which were full power cycles), and one full-resolution Hough-circle-detection call that silently OOM-killed the Pi&rsquo;s server process <cite>log.md</cite>.</p>
+</section>
+
+<section id="s3">
+<h2><span class="num">03</span>exp-001&rsquo;s Retrospective: a 12-Agent Overnight Analysis</h2>
+<p>Following the session, the operator ran a two-round, 12-agent retrospective the same night: <strong>7 independent analysts</strong> (Round 1) each examined the raw evidence from a distinct lens, followed by <strong>5 adversarial cross-examiners</strong> (Round 2) who attacked, corrected, or killed Round-1 proposals against the actual failure modes, cost, and new-complexity risk &mdash; with Round&nbsp;2&rsquo;s verdicts explicitly overriding Round&nbsp;1 wherever they conflicted <cite>retro/PLAN.md</cite>. Several of the retrospective&rsquo;s most load-bearing conclusions are things Round&nbsp;1 proposed and Round&nbsp;2 subsequently disproved or weakened; this document reports the final, post-Round-2 verdict for each, while noting the reversal.</p>
+
+<h3><span class="num">3.1</span>The seven Round-1 lenses, in brief</h3>
+<div class="tablewrap"><table>
+<thead><tr><th style="width:14ch">Lens</th><th>Core finding / proposal</th></tr></thead>
+<tbody>
+<tr><td><strong>Delegator</strong></td><td>Split perception from decision: a cheap/fast vision model answers structured questions per frame; Claude stays orchestrator. Argues the false contacts were architecture-hard, not perception-hard.</td></tr>
+<tr><td><strong>Librarian</strong></td><td>Diagnosed the stale-tip constant as a memory-architecture bug, not a vision bug &mdash; the same wrong pixel value was copy-pasted through four consecutive scripts. Proposed typed calibration storage and lessons-as-enforced-checks rather than lessons-as-prose.</td></tr>
+<tr><td><strong>Cartographer</strong></td><td>Claude &ldquo;never had a map &mdash; it had a pose, re-derived from scratch every task.&rdquo; Proposed a persistent object registry anchored to a fixed visual fiducial rather than to the gantry&rsquo;s own unreliable coordinate system.</td></tr>
+<tr><td><strong>Machinist</strong></td><td>Framed the day as &ldquo;hardware/wiring problems wearing cognitive costumes.&rdquo; Headline proposal: wire the (conductive) probe wire to Grbl&rsquo;s electrical-probe input for deterministic contact sensing.</td></tr>
+<tr><td><strong>Perception Architect</strong></td><td>Mapped failures to a 6-item root-cause taxonomy; proposed fiducial markers plus a uniquely-colored wire tip as the single highest-leverage, one-afternoon fix.</td></tr>
+<tr><td><strong>Behaviorist</strong></td><td>The day was &ldquo;structurally exploit-only&hellip; epistemic value zero&rdquo; &mdash; no verb in the loop for &ldquo;look around to reduce uncertainty.&rdquo; Proposed 7 hard process rules, including &ldquo;after 2 failures of the same sensing approach, change the physics, not the sensor code.&rdquo;</td></tr>
+<tr><td><strong>Coroner</strong></td><td>Unbiased failure appraisal: re-verified the four load-bearing contact frames against the session&rsquo;s own narrative and found it refuted by the pixels in 3 of 4 cases. Produced the failure-taxonomy table reused in the final report.</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:0.85rem;color:var(--muted)"><cite>retro/round1/{delegator,librarian,cartographer,machinist,perception,behaviorist,coroner}.md</cite></p>
+
+<h3><span class="num">3.2</span>The five Round-2 skeptics, and where they reversed Round&nbsp;1</h3>
+<div class="tablewrap"><table>
+<thead><tr><th style="width:14ch">Skeptic</th><th>Key correction</th></tr></thead>
+<tbody>
+<tr><td><strong>operator.md</strong></td><td>Killed the electrical/mechanical probe as the <em>primary</em> contact sensor &mdash; a hardware switch would delete one of the project&rsquo;s most interesting open questions. Demoted it to a ground-truth <em>oracle</em> used only to score the visual sensor.</td></tr>
+<tr><td><strong>complexity.md</strong></td><td>Killed the &ldquo;is the wire bent?&rdquo; discriminator outright &mdash; bend turned out uncorrelated with contact. Weakened a per-step reactive vision loop and a 16-invariant safety library down to minimal forms. Killed a proposed vector-indexed skill library as &ldquo;enterprise cosplay for 13 scripts.&rdquo;</td></tr>
+<tr><td><strong>completeness.md</strong></td><td>Surfaced eight gaps no Round-1 report had covered, most importantly: nobody had costed the agent itself, and nobody had questioned whether &ldquo;touch three rolls&rdquo; was even the right probe task.</td></tr>
+<tr><td><strong>feasibility.md</strong></td><td>The Grbl board is a separate host, reachable directly without the Pi &mdash; reshaping the whole test slate to be offline-first. Flagged that fiducial tags would likely fail at the edges of a wide lens, and the board&rsquo;s probe pin might not be broken out to a header at all.</td></tr>
+<tr><td><strong>evidence.md</strong></td><td>Ran the closest factual audit: recomputed the &ldquo;just look at the wire&rdquo; claim to a 3-to-1 split (§3.4), and narrowed &ldquo;~50% avoidable&rdquo; to a defensible ~3.5&ndash;4.5h range. Downgraded the &ldquo;USB brownout caused the outages&rdquo; theory to an untested hypothesis.</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:0.85rem;color:var(--muted)"><cite>retro/round2/{operator,complexity,completeness,feasibility,evidence}.md</cite></p>
+
+<h3><span class="num">3.3</span>Quantified findings</h3>
+<p><strong>Cost.</strong> The session consumed the following, across 867 assistant turns, to produce one machine-verified touch (the black roll):</p>
+<div class="stat-row">
+  <div class="stat"><span class="v">1,110,397</span><span class="l">output tokens</span></div>
+  <div class="stat"><span class="v">2,856,804</span><span class="l">cache-creation tokens</span></div>
+  <div class="stat"><span class="v">201,034,297</span><span class="l">cache-read tokens</span></div>
+  <div class="stat"><span class="v">~$438</span><span class="l">Opus-priced cost</span></div>
+</div>
+<p><cite>retro/round2/completeness.md</cite> &mdash; the retrospective&rsquo;s diagnosis: the dominant cost was <strong>context re-reading, not reasoning</strong> &mdash; a single, ever-growing conversation re-read from scratch on every turn <cite>retro/MORNING_REPORT.md</cite>.</p>
+
+<div class="callout contradiction">
+  <p class="callout-label">Unreconciled source discrepancy &mdash; session duration</p>
+  <p>The retrospective&rsquo;s final report states the session ran &ldquo;~8h48m (~9h),&rdquo; bounded by the first and last operator messages (16:37Z&ndash;01:25Z) <cite>retro/MORNING_REPORT.md</cite>, while a separate report computes &ldquo;~11h23m&rdquo; from the full raw transcript span, including setup and teardown (16:46Z&ndash;04:09Z) <cite>retro/round2/completeness.md</cite>. Both are described by their authors as verified against the transcript. The source corpus does not reconcile them, and neither does this document.</p>
+</div>
+
+<p><strong>Avoidable time.</strong> An initial estimate that roughly half the session (~4.5h) was avoidable rework was checked and narrowed to a defensible <strong>~3.5&ndash;4.5 hour range</strong> &mdash; the original had over-credited some legitimate work as 100% avoidable <cite>retro/round1/coroner.md</cite> <cite>retro/round2/evidence.md</cite>.</p>
+
+<p><strong>Failure taxonomy</strong> (share of avoidable time by cause class):</p>
+<div class="tablewrap"><table>
+<thead><tr><th>Class</th><th style="width:8ch">Share</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Instrument &mdash; a proxy sensor lied</td><td class="num-cell">~45%</td><td>Vignette-fooled phase correlation, a dead-serial-connection mistaken for a dead axis, a stale tip constant off by ~167px, Hough jitter, red-on-red segmenter confusion</td></tr>
+<tr><td>Judgment &mdash; asymmetric trust, no exploration</td><td class="num-cell">~25%</td><td>Instant trust in &ldquo;success,&rdquo; slow-to-earn distrust of &ldquo;failure,&rdquo; never took a second camera angle to check an ambiguous read</td></tr>
+<tr><td>World-model &mdash; axis map, geometry</td><td class="num-cell">~20%</td><td>The operator had to correct the axis-to-motion mapping three times during the session</td></tr>
+<tr><td>Process &mdash; lessons noted, not enforced</td><td class="num-cell">~10%</td><td>A safety rule invented mid-session cascaded into blocking legitimate motion later in the same session</td></tr>
+<tr><td>Infrastructure &mdash; outages</td><td class="num-cell">small</td><td>Mostly unavoidable network/power incidents</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:0.85rem;color:var(--muted)"><cite>retro/round1/coroner.md</cite> and <cite>retro/MORNING_REPORT.md</cite> report identical percentages.</p>
+
+<h3><span class="num">3.4</span>&ldquo;Just look at the wire&rdquo; &mdash; the claim that split 3-to-1</h3>
+<p>Several reports had independently leaned on an intuitive claim: a single glance at the tip-to-target gap should trivially separate a true contact from a false one. A dedicated fact-check against the four decisive frames split this claim:</p>
+<ul>
+  <li><span class="tag verified">true</span>&nbsp; <strong>For the two grossly-misaligned false contacts</strong> &mdash; in one, the wire tip sat hundreds of pixels from the target; in the other, comparing background objects the tracker wasn&rsquo;t even watching proved the whole camera view had shifted while the target hadn&rsquo;t moved.</li>
+  <li><span class="tag retracted">false</span>&nbsp; <strong>For the one case that actually mattered</strong> &mdash; the cup false-positive. Whether the wire tip rested on the cup&rsquo;s bottom or hung a few millimeters above it inside the cup&rsquo;s glow was genuinely invisible from a single oblique camera view. The session&rsquo;s own narrative <em>had</em> looked at this exact frame and written &ldquo;tip visibly bent against the cup&rsquo;s inner wall&rdquo; &mdash; the glance is what produced the false positive, not the fix for it.</li>
+</ul>
+<p>The retrospective&rsquo;s conclusion: a smarter single-frame read is not the fix. <strong>A second, independent viewpoint is</strong> &mdash; precisely the capability the operator had originally flagged as missing <cite>retro/round2/evidence.md</cite> <cite>retro/MORNING_REPORT.md</cite>.</p>
+
+<h3><span class="num">3.5</span>What nobody had asked, and the four final architecture recommendations</h3>
+<p>The most structurally important finding in Round&nbsp;2 was a question none of the seven Round-1 lenses had raised: <em>is &ldquo;touch three tape rolls&rdquo; even the right task to be running?</em> The final verdict:</p>
+<blockquote><p>&ldquo;&lsquo;touch all three rolls&rsquo; front-loaded a sub-millimeter contact task onto a rig with no contact sensor &mdash; spending the research budget on the sub-problem <em>least</em> informative about the stated question (grounded world-modelling, instrument-lie recovery, cross-session adaptation) and most dependent on a missing $15 part.&rdquo; <cite>retro/round2/completeness.md</cite> <cite>retro/MORNING_REPORT.md</cite></p></blockquote>
+<p>This single observation is arguably the direct seed of exp-002&rsquo;s very different design: rather than measuring whether contact was achieved, measure whether the world model built along the way was accurate and legible.</p>
+<p>Four architecture recommendations survived both rounds, each reduced to a deliberately minimal form after Round&nbsp;2 stripped out heavier versions Round&nbsp;1 had proposed:</p>
+<ol>
+  <li><strong>A reactive orchestrator with cheap eyes</strong> &mdash; one vision-model call at defined decision checkpoints, not a continuous reactive loop (which risked recreating the session&rsquo;s own slowness complaint).</li>
+  <li><strong>Typed calibration with a measure-live/trust-from-config split</strong> &mdash; one config file and one enforced preflight rule (&ldquo;a measure-live value used as a stored literal is rejected&rdquo;), not a heavier 4-tier store.</li>
+  <li><strong>A spatial registry anchored to a fixed visual reference point</strong>, not to the gantry&rsquo;s own coordinate system, which resets to zero on every reconnect.</li>
+  <li><strong>A halt-and-ask policy with priority over task completion</strong> &mdash; stop and ask after two failed attempts on the same target, a detected mechanical stall, any irreversible action, or an unresolved two-hypothesis ambiguity.</li>
+</ol>
+<p style="font-size:0.85rem;color:var(--muted)"><cite>retro/MORNING_REPORT.md, Section 3</cite></p>
+<p>Three items were explicitly left <strong>deliberately unsolved</strong>, on the reasoning that solving them with hardware would answer the engineering question while quietly deleting the research question: whether physical contact can be grounded from vision alone (a hardware probe is worth building only as a scoring oracle, never as the primary sensor); whether the agent chooses an uncertainty-reducing action when the loop actually allows it; and how fast the agent&rsquo;s model of a space adapts across sessions, which a single session cannot measure at all.</p>
+
+<h3><span class="num">3.6</span>The data-capture protocol</h3>
+<p>The retrospective&rsquo;s other major product was a capture-discipline document, motivated by a very concrete problem: roughly 300 of the session&rsquo;s frames and its full server log existed only on the Pi and were lost the moment its network connection dropped; the 44 frames that survived did so only because they happened to be fetched locally for ad-hoc debugging <cite>retro/DATA_CAPTURE_PROTOCOL.md</cite>. Its core principle &mdash; &ldquo;capture at the source, mirror continuously, never let the agent&rsquo;s own summary be the record&rdquo; &mdash; became the enforceable backbone of exp-002&rsquo;s design (§5.2).</p>
+</section>
+
+<section id="s4">
+<h2><span class="num">04</span>The Afternoon Demo Production <span style="font-weight:400;color:var(--muted);font-size:1rem">(2026-08-04, same day)</span></h2>
+<p>A body of files in the exp-001 folder &mdash; <code>demo/</code>, along with <code>player.html</code>, <code>record.js</code>, several rendered video files, and dozens of <code>m0</code>&ndash;<code>m7</code>-prefixed checkpoint photos &mdash; initially appeared to be the work of a separate, concurrent process. It is not. File modification times, the session&rsquo;s own narrative log, and an embedded transcript file&rsquo;s own timestamps together confirm it is a <strong>same-day, later-afternoon continuation</strong>: the morning session (§2.4) ended around 10:58 local time; the demo production ran from roughly 13:53 to 14:57, three to five hours later <cite>file mtimes across experiments/exp-001-find-blue-tape/demo/</cite> <cite>log.md</cite>.</p>
+<p>The pipeline: export the real Claude Code session transcript (<code>events_raw.json</code>) &rarr; build a self-playing HTML &ldquo;documentary&rdquo; page (<code>player.html</code>) that runs a sped-up time-lapse video alongside a scrolling, verbatim panel of the actual session transcript, explicitly stating &ldquo;Nothing here is staged or re-enacted&rdquo; &rarr; use a headless-browser automation script (<code>record.js</code>, via Playwright) to screen-record that page autoplaying end to end &rarr; render the recording down into a full file (<code>TouchAllThreeTape_Demo.mp4</code>, ~57MB), a 720p version (~9.5MB), a further-compressed embeddable version (~4.1MB), and finally a single self-contained HTML artifact with the video and images base64-encoded directly into the page (<code>artifact.html</code>, ~5.7MB) <cite>experiments/exp-001-find-blue-tape/demo/{player.html,record.js,events_raw.json}</cite>. File-size math checks out at every stage of this pipeline, indicating it completed successfully.</p>
+<p>One file in this set, <code>TouchAllThreeTape_ClaudeThoughtProcess.txt</code>, contains no usable content &mdash; a hex-level inspection shows it is 69 bytes of stray whitespace and a truncated <code>/rc</code> fragment, most likely a botched shell-redirect artifact, and it is not cited as a source anywhere in this document.</p>
+</section>
+
+<section id="s5">
+<h2><span class="num">05</span>exp-002: &ldquo;The World Mirror&rdquo;</h2>
+
+<h3><span class="num">5.1</span>What changed, and why</h3>
+<p>exp-001 measured whether the physical task succeeded. exp-002 deliberately does not &mdash; its stated goal is <em>world-model fidelity</em>, not task completion:</p>
+<blockquote><p>&ldquo;a blind Claude&hellip; explores the workspace and produces an interactive 2D virtual mirror of it. The operator inspects the mirror to find exactly where Claude&rsquo;s comprehension diverges from reality, and can dispatch an audit agent to the logs to reconstruct how each false belief formed.&rdquo; <cite>experiments/exp-002/operator/PLAN.md</cite></p></blockquote>
+<p>Its own stated success bar is not a correct map, but a <em>legible</em> one: &ldquo;every wrong thing in the mirror is traceable in under ~10 minutes of agent time to the exact journal lines where the false belief formed. If the map is wrong AND untraceable, the capture contract failed&rdquo; <cite>PLAN.md</cite>. The long-term extension, designed into the schema from the start but not yet built, is a two-way channel: the operator clicks an object in the map and a destination, and Claude executes the move <cite>PLAN.md</cite>.</p>
+
+<h3><span class="num">5.2</span>Architecture: keeping the subject genuinely blind</h3>
+<p>The experiment splits cleanly into two roles that must never share files: an <strong>operator</strong> side (this document, the comparison viewer, ground truth, audit reports) and a <strong>subject</strong> side (a mission brief, a schema spec, and a data-capture contract &mdash; the only three files the blind Claude session ever receives) <cite>PLAN.md</cite>. Several concrete leak surfaces were identified and closed:</p>
+<ul>
+  <li>The project&rsquo;s own accumulated memory auto-loads into any session run from within this project&rsquo;s directory tree &mdash; closed by running the subject session from an entirely separate directory outside the project.</li>
+  <li>The exp-001-specific data-capture contract, which named colors, objects, and known failure modes by name, was rewritten generically before being shown to the subject.</li>
+  <li>The Raspberry Pi itself carried exp-001&rsquo;s frames, logs, and narrative in its home directory, plus shell history &mdash; closed by a sanitization pass (§5.3).</li>
+  <li>Grbl&rsquo;s own EEPROM configuration was deliberately left untouched and readable &mdash; reasoned as information a real blind operator would legitimately be entitled to read, not a breadcrumb <cite>PLAN.md</cite>.</li>
+</ul>
+<p>The mission brief given to the subject explicitly withheld one exception: no homing switches exist, so the rig can grind against hard mechanical stops, and small probing moves are mandatory &mdash; reasoned as &ldquo;hardware protection outranks experimental purity&rdquo; <cite>PLAN.md</cite>.</p>
+<p>The map schema (<code>world_model.json</code>) has one hard rule that makes the whole audit process mechanical rather than forensic later on: <strong>no object, belief, or region may be recorded without a citation</strong> back to the raw event journal. Every object gets a stable ID, a label, a confidence score, and an evidence trail; every declarative claim about how the rig works is recorded separately as a <code>belief</code>, each with its own confidence and evidence trail, and beliefs can be explicitly retracted and superseded rather than silently overwritten <cite>experiments/exp-002/subject/MAP_SPEC.md</cite>.</p>
+
+<h3><span class="num">5.3</span>The operator-side comparison viewer</h3>
+<p>A single self-contained HTML tool (no server, no build step) renders the subject&rsquo;s map to a 2D canvas &mdash; reachable envelope, unexplored regions explicitly shaded so unmapped territory is visible rather than just absent, camera field-of-view footprints per pose, and objects with opacity scaled to position confidence. Clicking any object or belief opens its full evidence trail, including the source frame if the corresponding frames folder is loaded. A ground-truth mode lets the operator load measured real-world positions, align the subject&rsquo;s arbitrary coordinate frame to the real one by matching two reference points, and automatically compute a discrepancy list &mdash; position offsets, label mismatches, phantom objects, missed objects, envelope-area error &mdash; exportable for the audit agents. A command-mode stub (click an object, click a destination) is wired into the same schema in anticipation of the future move-that-object capability <cite>experiments/exp-002/operator/viewer/index.html; verified working end-to-end against hand-planted test discrepancies before any real session was run</cite>.</p>
+
+<h3><span class="num">5.4</span>Pi sanitization</h3>
+<p>A fresh, low-privilege OS account was created for the subject (serial-port and camera-device group access only, no ability to read the primary account&rsquo;s home directory); exp-001&rsquo;s entire folder was archived off the Pi and deleted from it; shell history was cleared; and the sanitized login was verified directly &mdash; it could not find any exp-001 or exp-002 artifact anywhere on the filesystem, and it could open both the serial connection and every camera <cite>experiments/exp-002/operator/pi_sanitize.md; verified live</cite>. Grbl&rsquo;s <code>$$</code> configuration was recorded as operator-side ground truth before the session began <cite>grbl_dollar_dollar_2026-08-04.txt</cite>.</p>
+
+<h3><span class="num">5.5</span>The completed subject session <span style="font-weight:400;color:var(--muted);font-size:1rem">(2026-08-04, 21:45&ndash;23:10 UTC)</span></h3>
+<p>The blind session built its own capture infrastructure from scratch (a hardware-control server on the Pi, a client/journal wrapper on the laptop, a 30-second infrastructure heartbeat), then explored the rig for roughly 85 minutes.</p>
+
+<div class="stat-row">
+  <div class="stat"><span class="v">297.1mm</span><span class="l">X travel measured</span></div>
+  <div class="stat"><span class="v">26.5mm</span><span class="l">Y travel measured</span></div>
+  <div class="stat"><span class="v">10</span><span class="l">objects mapped</span></div>
+  <div class="stat"><span class="v">17</span><span class="l">beliefs recorded</span></div>
+  <div class="stat"><span class="v">5</span><span class="l">beliefs retracted</span></div>
+  <div class="stat"><span class="v">29%</span><span class="l">self-reported false-positive rate</span></div>
+</div>
+
+<p><strong>Envelope.</strong> The reachable X range was measured stop-to-stop at 297.1mm &mdash; directly contradicting Grbl&rsquo;s own stored configuration, which claims a 200mm maximum travel; the subject flagged the stored config as untrustworthy for this specific machine. A separate axis (labeled Z in its own frame) was explored across a 90mm range without ever finding a hard stop in either direction, and is recorded as an explicitly unexplored region rather than silently left off the map. The vertical axis&rsquo;s travel was measured at 26.5mm (one stop directly probed, the other inferred and flagged as such) <cite>world_model.json</cite>.</p>
+
+<p><strong>Objects &mdash; ten found, each with its own confidence and evidence.</strong> Two orange foam objects, two separate pieces of flat blue tape, the red wire probe itself (used as the coordinate anchor for every other object&rsquo;s position, carrying a flagged &plusmn;30mm systematic uncertainty as a result), the LED light panel serving as the work surface, a live power strip mounted on the same moving assembly as the light panel, a bundle of cables, a pen, and &mdash; spotted from an extreme camera angle and flagged with an open question about whether it&rsquo;s even part of this workspace &mdash; a small illuminated keyboard sitting beyond the gantry&rsquo;s own reach <cite>world_model.json</cite>.</p>
+
+<p><strong>Seventeen beliefs, five formally retracted.</strong> The belief list is where the &ldquo;comprehension gap&rdquo; concept becomes concrete: a belief that one camera was a fixed side-view was retracted once evidence showed it moved with the gantry&rsquo;s lateral axis; a belief that the vertical axis had an asymmetric, near-zero range was retracted once a proper stop-to-stop probe found a real ~26.5mm span; and a belief that a third axis produced no visible motion at all on either camera was retracted once the subject realized that axis moves the <em>work surface itself</em>, not the camera or the probe &mdash; each retraction is linked to the belief that superseded it and the evidence that forced the correction <cite>world_model.json</cite>. Two further retractions are recorded only in the session&rsquo;s narrative and its own self-reported metrics, not as structured belief entries &mdash; a small but real gap in the map&rsquo;s self-accounting worth flagging for the audit phase.</p>
+
+<p><strong>A real infrastructure incident, correctly diagnosed.</strong> Partway through the session, the Pi&rsquo;s USB serial connection dropped and re-enumerated under a new device name. The subject diagnosed this correctly by checking the kernel log before touching hardware, rather than guessing &mdash; and separately discovered that the physical rig had been disturbed during the outage (the moving carriage&rsquo;s resting position shifted by a few millimeters, and the work surface assembly was displaced by roughly 20&ndash;25mm). Its first read of this event was wrong: it initially concluded that two objects had been physically removed from the scene. It caught and corrected this itself a short time later, after a test move showed the work surface returning to a pixel-identical position &mdash; proving the objects had only gone temporarily out of frame due to the surface&rsquo;s displacement, not disappeared. This self-correction, with its own evidence trail, is one of the cleanest examples in either experiment of the kind of grounded recovery the whole project is trying to measure <cite>world_model.json</cite> <cite>journal.jsonl</cite>.</p>
+
+<p><strong>One missed escalation, one real one.</strong> After two uninformative probes of the vertical axis, the session&rsquo;s own rule (&ldquo;stop and ask after two failed attempts&rdquo;) should have fired but did not &mdash; the subject proceeded to probe a different axis instead, and flagged this lapse against itself retrospectively in the journal. A real escalation did fire shortly after, triggered by a suspected mechanical stall risk combined with a second axis producing no detectable response on either camera at all; the operator&rsquo;s guidance (&ldquo;one axis is vertical, the other two share the horizontal plane, larger moves are authorized&rdquo;) unblocked the session.</p>
+
+<div class="callout finding">
+  <p class="callout-label">Capture-contract gap</p>
+  <p>The operator&rsquo;s actual reply is not recorded as a verbatim, timestamped journal entry &mdash; only paraphrased inline in a later entry &mdash; which is exactly the kind of gold-standard label the subject&rsquo;s own capture contract requires to be preserved verbatim <cite>journal.jsonl</cite> <cite>SESSION_SUMMARY.md</cite>.</p>
+</div>
+
+<p><strong>Self-reported outcome.</strong> The session&rsquo;s own end-of-session accounting: <strong>29% of its ~24 substantive claims were later retracted</strong> (7 of 24), a false-positive rate the subject computed and reported against itself rather than having found by an external audit. Token/cost telemetry, which its own capture contract required at each phase boundary, was not actually logged &mdash; a rough post-hoc estimate of 400,000&ndash;600,000 tokens was given instead, and the gap against the contract&rsquo;s own requirement is noted openly in the session summary <cite>journal.jsonl</cite> <cite>SESSION_SUMMARY.md</cite>.</p>
+<p>A minor accounting discrepancy is worth noting for completeness: the session&rsquo;s own summary claims 322 journal lines and 234 mirrored frames, while the archived files actually contain 332 lines and 251 image files (247 excluding four post-hoc analysis images) &mdash; the self-reported freeze counts and the actual archive don&rsquo;t quite match, a small but genuine gap in the freeze protocol&rsquo;s own bookkeeping.</p>
+<p><strong>Final rig state.</strong> The gantry was left at a known position with the servers shut down cleanly; the summary explicitly warns that the coordinate system will reset to zero on the next power cycle and gives the exact frame and object positions needed to re-anchor a future session against it <cite>SESSION_SUMMARY.md</cite>.</p>
+
+<h3><span class="num">5.6</span>What has not yet happened</h3>
+<p>The experiment&rsquo;s actual payoff &mdash; the operator physically measuring the real workspace, aligning it against the subject&rsquo;s map in the viewer, generating a discrepancy list, and dispatching audit agents to trace each wrong belief back to the journal lines that produced it &mdash; has <strong>not started</strong>. No ground-truth file for the real session exists yet (only the synthetic fixture used to test the viewer itself), the viewer has never been loaded with the real session&rsquo;s map, and no audit report has been written. This is the explicit next step, not a gap in this document.</p>
+</section>
+
+<section id="s6">
+<h2><span class="num">06</span>Cross-Cutting Findings</h2>
+
+<h3><span class="num">6.1</span>A camera claim that genuinely conflicts across the two experiments</h3>
+<div class="callout contradiction">
+  <p class="callout-label">&#9888; unresolved contradiction</p>
+  <p>exp-001&rsquo;s recorded hardware facts state directly that the beam-mounted camera &ldquo;does not move with head in X&rdquo; <cite>retro/EVIDENCE_INDEX.md</cite>. exp-002&rsquo;s blind subject, independently and without any knowledge of that claim, directly measured the same camera moving <em>with</em> the lateral axis at 2.46&ndash;5.03 pixels per millimeter across sixteen separately verified steps, and used that measurement as one of its higher-confidence beliefs <cite>world_model.json</cite>. These two statements are not easily reconciled &mdash; read at face value, they are a direct contradiction between two independently-produced, evidence-cited sources. The more likely explanation is a documentation error in exp-001&rsquo;s notes rather than the rig being physically reconfigured between experiments, but this document does not resolve it further, because neither does the source material. It&rsquo;s presented here deliberately, as an example of exactly the kind of gap this whole project is built to surface rather than quietly paper over.</p>
+</div>
+
+<h3><span class="num">6.2</span>A measurement that disagrees, and probably shouldn&rsquo;t be trusted equally on both sides</h3>
+<p>exp-001&rsquo;s hardware notes give the camera-standoff axis a range of &ldquo;~64mm,&rdquo; with no stated measurement method. exp-002 measured the same axis, stop-to-stop, at 26.5mm. A roughly 37mm gap between an unrigorous estimate and a camera-verified measurement is best read as the earlier figure simply being wrong, not as evidence the hardware changed &mdash; but this document flags it rather than silently using one number throughout.</p>
+
+<h3><span class="num">6.3</span>The axis map itself: consistent, with one added layer of resolution</h3>
+<p>At the level of &ldquo;which axis does what role,&rdquo; the two experiments agree: two axes jointly span the horizontal work plane, and one axis is the odd one out, controlling standoff/height. What exp-002 added, which exp-001 never actually determined, is <em>which physical part moves</em> for the horizontal-plane pair &mdash; exp-001 only ever inferred an axis&rsquo;s role from watching pixels shift, and exp-002&rsquo;s subject discovered that one of those two axes moves the work surface itself (a tray carrying the light panel and everything on it), not the gantry head. Both explanations produce an identical pixel-shift signature from a fixed camera, so this is better read as exp-002 resolving an ambiguity exp-001 never actually had reason to notice, not as a contradiction.</p>
+
+<h3><span class="num">6.4</span>A resolved &ldquo;mystery,&rdquo; for the record</h3>
+<p>Both the exp-002 subject&rsquo;s session log and this document&rsquo;s own research pass flagged an unexplained detail: a third, lower-resolution Arducam camera appears briefly in the Pi&rsquo;s device log a few hours before the subject session began, with no other record of it anywhere in the project&rsquo;s files. This is not actually unexplained &mdash; it is fully accounted for by this same operator conversation: a third camera was physically connected and photographed through this exact session shortly beforehand, at the operator&rsquo;s request, and disconnected again immediately after. The dmesg timestamps line up. It is included here only so a future reader doesn&rsquo;t have to re-solve it.</p>
+
+<h3><span class="num">6.5</span>The throughline</h3>
+<p>Read end to end, the two experiments are answering the project&rsquo;s mission statement from opposite directions. exp-001 tried to <em>complete a physical task</em> and, in doing so, accidentally produced a rich catalog of every way a cheap sensor can lie to an agent that trusts it too quickly &mdash; and its own retrospective&rsquo;s sharpest finding was that the task itself was measuring the wrong thing. exp-002 took that finding seriously: it stopped asking &ldquo;did the touch succeed&rdquo; and started asking &ldquo;is the belief accurate, and can we trace exactly where it went wrong if not&rdquo; &mdash; building the evidentiary and architectural scaffolding (the journal, the belief ledger, the sanitized blindness, the comparison viewer) needed to actually answer that question, rather than just asserting an answer. The subject session&rsquo;s own honest self-accounting &mdash; a 29% retraction rate, five formally traced belief-corrections, one missed escalation caught retrospectively, one real self-correction with a clean evidence trail &mdash; is early but genuinely promising evidence that the scaffolding is working roughly as intended. The one piece still missing is the part the whole experiment exists to produce: the actual operator-side audit, comparing the map against reality and tracing every remaining wrong belief back to its root cause.</p>
+</section>
+
+<section id="s7">
+<h2><span class="num">07</span>Current State and Immediate Next Steps</h2>
+<ul>
+  <li>exp-001 is closed. Its retrospective&rsquo;s morning test slate (offline cost teardown, a vision-model contact bake-off, a replay-based contact-logic test, an escalation-policy replay, an electrical-probe feasibility check, and a simulation spike) has not been executed &mdash; it remains available as a well-scoped, ranked backlog if the project returns to the contact-sensing question directly.</li>
+  <li>exp-002&rsquo;s subject session is complete and archived. The immediate next steps, in order: physically measure the real workspace and record it as ground truth; load both the subject&rsquo;s map and the ground truth into the operator viewer; export the resulting discrepancy list; and run one audit agent per discrepancy to trace each wrong belief back to the exact journal lines where it formed, classifying each by root cause the same way exp-001&rsquo;s retrospective did (instrument lie, judgment failure, world-model gap, or process failure).</li>
+  <li>Separately, the operator has begun adding limit switches to the physical rig, which will remove the single largest safety constraint both experiments operated under (no homing, hard-stop grinding risk, mandatory small probing moves) &mdash; worth revisiting the &ldquo;soft limits&rdquo; and escalation-policy language in both experiments&rsquo; capture contracts once that hardware change lands.</li>
+</ul>
+</section>
+
+<hr class="rule">
+
+<section id="appendix" class="appendix">
+<h2><span class="num">§</span>Source Index</h2>
+<h3>exp-001 raw run</h3>
+<p><code>experiments/exp-001-find-blue-tape/{log.md,goal.json}</code>, <code>phase2_home.py</code> through <code>p11_descend.py</code> and their corresponding <code>*_run*.log</code>/<code>phase*.log</code> files, <code>server_v2.py</code>, <code>server_v3.py</code>, <code>client.py</code>, <code>track_cup.py</code>, <code>center_tape.py</code>, <code>sweep_x.py</code>, <code>zwatch.py</code>, <code>m1_survey.py</code>/<code>.log</code>, <code>m2_black.py</code>/<code>.log</code>, <code>m4_red.py</code>/<code>.log</code>.</p>
+<h3>exp-001 retrospective</h3>
+<p><code>experiments/exp-001-find-blue-tape/retro/{PLAN,EVIDENCE_INDEX,MORNING_REPORT,DATA_CAPTURE_PROTOCOL}.md</code>, <code>retro/round1/{delegator,librarian,cartographer,machinist,perception,behaviorist,coroner}.md</code>, <code>retro/round2/{operator,complexity,completeness,feasibility,evidence}.md</code>.</p>
+<h3>exp-001 demo production</h3>
+<p><code>experiments/exp-001-find-blue-tape/demo/{player.html,record.js,events_raw.json}</code> and its rendered video/artifact outputs.</p>
+<h3>exp-002</h3>
+<p><code>experiments/exp-002/operator/{PLAN.md,pi_sanitize.md,grbl_dollar_dollar_2026-08-04.txt,pre_session_state/NOTE.md,reference_capture_lessons.md,viewer/index.html,dry_run/{world_model.json,ground_truth.json}}</code>, <code>experiments/exp-002/subject/{README.md,MAP_SPEC.md,CLAUDE.md}</code>, <code>experiments/exp-002/operator/sessions/2026-08-04_1/{world_model.json,SESSION_SUMMARY.md,log.md,journal.jsonl,calibration.json}</code>.</p>
+<h3>Project memory and history</h3>
+<p><code>memory/proto-town-hardware.md</code>, <code>memory/exp-001-retro.md</code>, <code>memory/MEMORY.md</code>, repository git log.</p>
+</section>
+
+</article>
+
+<footer class="colophon">
+  Proto-Town Project History &middot; compiled 2026-08-05 &middot; markdown source at <code>docs/PROJECT_HISTORY.md</code>
+</footer>
+
+</body></html>

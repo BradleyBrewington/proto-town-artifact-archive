@@ -1,0 +1,365 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><title>SBIR Coverage Audit</title></head><body>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F6F7F5; --surface:#FFFFFF; --surface-2:#EEF1EE; --ink:#17201E; --ink-2:#4F5B58; --line:#D5DBD8;
+  --accent:#1F6F78; --accent-ink:#FFFFFF;
+  --ok:#2E7D4F; --ok-bg:#E3F1E8; --warn:#A6660F; --warn-bg:#F8ECD6; --bad:#B3362B; --bad-bg:#F8E1DE; --na:#6B7472; --na-bg:#E9ECEA;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Archivo","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111615; --surface:#181F1D; --surface-2:#1F2826; --ink:#E5EAE7; --ink-2:#A3ADAA; --line:#2E3936;
+    --accent:#5FB7BF; --accent-ink:#0D1514;
+    --ok:#6FC993; --ok-bg:#16301F; --warn:#E3A84A; --warn-bg:#352711; --bad:#F08A7E; --bad-bg:#3A1A16; --na:#96A19D; --na-bg:#242D2B;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111615; --surface:#181F1D; --surface-2:#1F2826; --ink:#E5EAE7; --ink-2:#A3ADAA; --line:#2E3936;
+  --accent:#5FB7BF; --accent-ink:#0D1514;
+  --ok:#6FC993; --ok-bg:#16301F; --warn:#E3A84A; --warn-bg:#352711; --bad:#F08A7E; --bad-bg:#3A1A16; --na:#96A19D; --na-bg:#242D2B;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:40px 28px 96px}
+header.masthead{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:28px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:end}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+h1{font-family:var(--display);font-weight:700;font-size:38px;line-height:1.05;margin:6px 0 10px;letter-spacing:-.01em;text-wrap:balance}
+.meta{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);line-height:1.7;text-align:right}
+h2{font-family:var(--display);font-weight:600;font-size:22px;margin:44px 0 12px;padding-top:16px;border-top:1px solid var(--line);letter-spacing:-.005em}
+h2 .n{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--accent);margin-right:10px;vertical-align:2px}
+h3{font-family:var(--display);font-weight:600;font-size:16px;margin:24px 0 8px}
+p{max-width:72ch;margin:0 0 10px}
+ul{margin:0 0 12px;padding-left:20px;max-width:80ch}
+li{margin:0 0 5px}
+li>ul{margin-top:4px}
+code,.m{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:3px;word-break:break-all}
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.5;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:14px 16px;overflow-x:auto;margin:10px 0 16px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--surface);margin:12px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:var(--surface-2);white-space:nowrap;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.src{font-weight:600;white-space:nowrap}
+td .u{font-family:var(--mono);font-size:12px;color:var(--ink-2);display:block;word-break:break-all;font-weight:400}
+.chip{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:2px 7px;border-radius:3px;white-space:nowrap;font-weight:500}
+.ok{color:var(--ok);background:var(--ok-bg)} .warn{color:var(--warn);background:var(--warn-bg)} .bad{color:var(--bad);background:var(--bad-bg)} .na{color:var(--na);background:var(--na-bg)}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:18px 0 8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:14px 16px}
+.tile .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.tile .v{font-family:var(--display);font-size:28px;font-weight:600;line-height:1.1;margin:4px 0 4px;font-variant-numeric:tabular-nums}
+.tile .d{font-size:13px;color:var(--ink-2)}
+.callout{border-left:3px solid var(--accent);background:var(--surface);padding:12px 16px;margin:14px 0 18px;max-width:86ch}
+.callout.bad{border-left-color:var(--bad);color:var(--ink);background:var(--surface)}
+.legend{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin:6px 0 4px}
+.legend .chip{margin-right:6px}
+.matrix td{text-align:center;font-family:var(--mono);font-size:12px}
+.matrix td:first-child{text-align:left;font-family:var(--sans);font-size:13.5px;font-weight:500;white-space:nowrap}
+.prio{font-family:var(--mono);font-size:11.5px;color:var(--accent);font-weight:500}
+a{color:var(--accent)}
+.small{font-size:13px;color:var(--ink-2)}
+.toc{font-family:var(--mono);font-size:12.5px;display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 8px}
+.toc a{text-decoration:none;color:var(--ink-2)}
+.toc a:hover,.toc a:focus{color:var(--accent);text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:640px){header.masthead{grid-template-columns:1fr}.meta{text-align:left}h1{font-size:30px}}
+</style>
+
+<div class="wrap">
+<header class="masthead">
+  <div>
+    <div class="eyebrow">Icarus Dynamics · Federal BD tooling</div>
+    <h1>SBIR Coverage Audit</h1>
+    <div class="small">Every site that posts open SBIR/STTR topics, what each tool in this session can actually pull from it, and the exact tool spec needed to close the gaps.</div>
+  </div>
+  <div class="meta">Audit date 2026-08-26<br>DoD release 26.5 opened today<br>Tools tested: WebFetch, WebSearch, Chrome (solomon), Federal Atlas MCP<br>Probes: ~300 fetches across 4 subagents + direct tests</div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <a href="#s1">1 Bottom line</a><a href="#s2">2 Program state</a><a href="#s3">3 Access methods</a><a href="#s4">4 Source inventory</a><a href="#s5">5 Field matrix</a><a href="#s6">6 DSIP API</a><a href="#s7">7 Gaps</a><a href="#s8">8 Build spec</a><a href="#s9">9 Caveats</a><a href="#s10">10 Sources</a>
+</nav>
+
+<h2 id="s1"><span class="n">1</span>Bottom line</h2>
+<div class="summary">
+  <div class="tile"><div class="k">DoD topics live on DSIP</div><div class="v">60</div><div class="d">56 open + 4 pre-release across ARMY 6, USAF 10, NAVY 24, DARPA 6, OSD 10, DMEA 2, DTRA 2</div></div>
+  <div class="tile"><div class="k">Open topics on SBIR.gov</div><div class="v">337</div><div class="d">All agencies; includes NSF 26-510 subtopics and HHS/NCI contract topics</div></div>
+  <div class="tile"><div class="k">Federal Atlas MCP open</div><div class="v">305</div><div class="d">Mirror of SBIR.gov, 32 short, descriptions truncated at ~250 chars, topic numbers null</div></div>
+  <div class="tile"><div class="k">Sources with full topic text reachable now</div><div class="v">3 / 7</div><div class="d">DSIP via Chrome only; navysbir.com and armysbir.army.mil via WebFetch; none via a clean API</div></div>
+</div>
+<ul>
+  <li><strong>The authoritative DoD source (DSIP, dodsbirsttr.mil) is unreachable from the cloud side.</strong> WebFetch refuses every path (robots.txt policy). The only working route today is your Chrome browser on solomon, which is slow, manual, and not something an agent fleet can run on.</li>
+  <li><strong>Through Chrome I reverse-engineered the full DSIP public JSON API</strong> (section 6). It is unauthenticated, returns every field you care about (objective, Phase I/II/III text, keywords, ITAR, CMMC, tech areas, references, published Q&amp;A, TPOC during pre-release, per-topic PDF, instruction PDFs). That is the primary build target. One Python collector against it gives you 100% of DoD.</li>
+  <li><strong>TPOC names and emails are exposed only while a topic is in Pre-Release</strong> (<code>showTpoc:true</code>, <code>topicManagers[]</code>). Once it opens, <code>showTpoc:false</code>, <code>topicManagers:null</code>. Your collector must run during the pre-release window (first Wednesday of month, ~3 weeks) or you lose the TPOC data permanently.</li>
+  <li><strong>SBIR.gov is the only cross-agency aggregator that works</strong>, but only its HTML (10 rows/page, no agency filter that works, detail pages lack objective/phases/TPOC/ITAR). Its JSON API returns <code>{"message":"Forbidden"}</code> server-side; it is down for maintenance, not blocked by my tooling.</li>
+  <li><strong>Civilian agencies are a patchwork</strong>: NSF is fully readable (HTML); NASA and DOT are PDF-only; NIH grants are on simpler.grants.gov; NIH/NASA/ED/DHS/EPA contract solicitations live on SAM.gov (JS shell, needs your API key); DOE OSTI sub-pages return 403; DHS portal DNS fails. Nothing civilian is open for Phase I right now except NSF (11/4) and NIH (9/5), plus ARPA-H (9/11) and NCI (9/21).</li>
+  <li><strong>Your existing local tools (sam_search.py, paul.duckdb, the local sbir-search MCP) are invisible from this session.</strong> No folder is connected, so device_bash cannot run them. Connect the Projects folder and they become usable here.</li>
+  <li><strong>Net gap to "complete awareness":</strong> 5 tools, roughly 6 to 9 working days (section 8). Two of them (DSIP collector, SBIR.gov scraper) cover ~90% of the value.</li>
+</ul>
+
+<h2 id="s2"><span class="n">2</span>Program state as of today</h2>
+<ul>
+  <li>SBIR/STTR reauthorized 2026-04-13 (Small Business Innovation and Economic Security Act, S.3971) through 2031-09-30, after a six-month lapse starting 2025-10-01.</li>
+  <li>DoD runs numbered monthly releases under the FY26 BAA (26.BZ = SBIR BAA, 26.TZ = STTR BAA, 26.BX/26.TX = CSO). Release 5: pre-release 2026-08-05, open 2026-08-26 12:00 ET, close 2026-09-23 12:00 ET, Q&amp;A closes 2026-09-09. Release 4 closed 2026-08-19. Pre-release for the next release opens the first Wednesday of the month.</li>
+  <li>Pre-release topics visible on DSIP today: ARM26BX03-DP007 Kinetic Reach (open 11/25), ARM26BX04-DV010 G-BAM (open 12/03), ARM26BX05-NP011 / ARM26TX05-NP002 xTech Search 10 (open 05/20/2027).</li>
+  <li>Civilian: NSF 26-510 due 11/4/26, 3/4/27, 7/7/27 (Project Pitch first). NIH PA-27-100 (SBIR) / PA-27-102 (STTR) due 9/5/26, 1/5/27, 4/5/27. ARPA-H SBIR/STTR presolicitation 7599226SN106 due 9/11/26. NCI Innovative Concept 75N98026R00109 due 9/21/26. NASA BAA 80NSSC26R0003 appendices 26A/26B closed 5/21; next Phase I appendix TBA. DOT FY26 closed 7/7. ED FY26 closed 6/29. DOE FY27 Phase I "expected summer 2026", not yet posted. NOAA FY27 "fall 2026". NIST, USDA, DHS, EPA: nothing posted.</li>
+</ul>
+
+<h2 id="s3"><span class="n">3</span>Access methods available in this session</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Method</th><th>What it is</th><th>Verdict</th><th>Limits observed</th></tr></thead>
+<tbody>
+<tr><td class="src">WebFetch</td><td>Fetches a URL, converts to markdown, a small model answers a prompt about it</td><td><span class="chip warn">PARTIAL</span></td><td>Obeys robots.txt (blocks all of dodsbirsttr.mil, sam.gov search, health.mil, federalregister HTML). GET only. Never returns raw HTML/JSON; returns a summary, so long text is condensed and field names cannot be verified byte-for-byte. Cross-host redirects not followed. Cached 15 min.</td></tr>
+<tr><td class="src">WebSearch</td><td>Web search, US only</td><td><span class="chip ok">WORKS</span></td><td>Good for discovering URLs and third-party topic lists (BW&amp;CO, Granted AI). Not a data source.</td></tr>
+<tr><td class="src">Chrome on solomon</td><td>Claude-in-Chrome extension driving your real browser</td><td><span class="chip ok">WORKS</span></td><td>Bypasses the robots block: DSIP renders, and same-origin <code>fetch()</code> from the page returns raw JSON. Extension site permissions block <code>sbir.gov</code> ("Navigation to this domain is not allowed"). Output filter strips results containing query strings; ~4 KB output cap per call. Requires your machine on and Chrome open. Not fleet-scalable.</td></tr>
+<tr><td class="src">Federal Atlas MCP</td><td>Third-party BD intelligence connector (SBIR.gov, SAM.gov, Grants.gov mirrors)</td><td><span class="chip warn">PARTIAL</span></td><td><code>search_sbir_solicitations</code>: 305 open vs 337 on SBIR.gov, <code>topic_number</code> and <code>branch</code> always null, description truncated ~250 chars, one record per topic (no full text even via <code>get_sbir_solicitation</code>). <code>search_opportunities</code> (SAM mirror): FTS for "SBIR" returned only 5 rows; missed ED, DOT, NIH contract notices. <code>search_grant_opportunities</code>: found NIH PA-27-100/101/102 and NSF 26-511 (instrumentation pilot, full synopsis) but not NSF 26-510, the main Phase I solicitation.</td></tr>
+<tr><td class="src">Cloud shell (Bash)</td><td>Linux sandbox with Python/Node</td><td><span class="chip bad">POLICY-RESTRICTED</span></td><td>Session policy forbids using curl/Python to reach content WebFetch cannot. Fine for parsing files you give it (PDFs, JSON dumps), not for scraping .mil/.gov.</td></tr>
+<tr><td class="src">device_bash (solomon)</td><td>Shell on your Windows machine inside a connected folder</td><td><span class="chip bad">NOT USABLE</span></td><td>No folder connected this session. Once <code>Projects</code> is connected, <code>sam_search.py</code>, <code>paul.duckdb</code> (read-only) and <code>.env</code> keys become reachable.</td></tr>
+<tr><td class="src">brad-ops skills</td><td>sam-search, paul-pipeline, track-opportunity, sam-gov-api</td><td><span class="chip bad">NOT USABLE HERE</span></td><td>All shell out to <code>C:\Windows\py.exe</code> via Desktop Commander paths that do not exist in this environment. Same fix: connect the folder.</td></tr>
+<tr><td class="src">Local sbir-search MCP</td><td>The tool you used previously to explore DoD topics</td><td><span class="chip na">NOT PRESENT</span></td><td>Not in this session's tool list. If it wraps DSIP, it is already most of Tool 1; expose it to Cowork.</td></tr>
+</tbody></table></div>
+
+<h2 id="s4"><span class="n">4</span>Source inventory and what each yields</h2>
+<div class="legend"><span class="chip ok">FULL</span>full topic text obtainable <span class="chip warn">PARTIAL</span>titles/dates/summary only <span class="chip bad">BLOCKED</span>unreachable from this session <span class="chip na">N/A</span>no topic data on site</div>
+
+<h3>A. DoD central</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Source</th><th>Posts</th><th>WebFetch</th><th>Chrome</th><th>What you get</th><th>Gap / note</th></tr></thead>
+<tbody>
+<tr><td class="src">DSIP topics app<span class="u">dodsbirsttr.mil/topics-app/</span></td><td>All DoD SBIR/STTR/CSO topics, pre-release + open + archived, Q&amp;A, instruction PDFs</td><td><span class="chip bad">BLOCKED</span></td><td><span class="chip ok">FULL</span></td><td>Everything (section 6): code, title, component, command, release, cycle, all dates, Q&amp;A dates, CMMC, ITAR, phase hierarchy (D2P2/Phase I), objective, description, Ph I/II/III, keywords, tech areas, focus areas, references, TPOC (pre-release only), published Q&amp;A, topic PDF, BAA instruction/preface PDFs</td><td>Only via your browser today. Search endpoint returned one 503 on first load (flaky; retry). No RSS/listserv URL exists.</td></tr>
+<tr><td class="src">DSIP solicitation docs<span class="u">dodsbirsttr.mil/submissions/api/public/download/solicitationDocuments?solicitation=DOD_SBIR_2026_P1_CBZ&amp;release=5&amp;documentType=RELEASE_INSTRUCTIONS</span></td><td>Release preface + component instruction PDFs (contain per-topic ITAR, D2P2, "may become classified" notes, page limits, award caps)</td><td><span class="chip bad">BLOCKED</span></td><td><span class="chip ok">FULL</span></td><td>PDFs. Param shapes: <code>solicitation=DOD_{SBIR|STTR}_{YYYY}_P1_{CBZ|CTZ|CBX|CTX}</code>, <code>release=n</code>, <code>documentType={RELEASE_PREFACE|RELEASE_INSTRUCTIONS|INSTRUCTIONS|PREFACE}</code>, <code>component=NAVY</code></td><td>Same PDFs are mirrored on navysbir.com/docs/ (reachable by WebFetch) for Navy only.</td></tr>
+<tr><td class="src">SBIR.gov topics<span class="u">sbir.gov/topics · sbir.gov/topics/{id}</span></td><td>All agencies, open + closed, 337 open</td><td><span class="chip warn">PARTIAL</span></td><td><span class="chip bad">BLOCKED</span> (extension permission)</td><td>List: id, title, agency, close date, 10/page, <code>keywords=</code> filter (phrase match), <code>status=Open</code>, date-range params. Detail: agency topic code (e.g. DAF26BZ05-NV026), branch, program, phase (D2P2 visible), solicitation number (26.BZ), release/open/close, one-paragraph description.</td><td>No objective, phases, keywords, TPOC, ITAR, Q&amp;A, attachments, DSIP deep link. <code>agency=</code> filter does not work. CSV export param (<code>export=csv</code>) returned HTML.</td></tr>
+<tr><td class="src">SBIR.gov API<span class="u">api.www.sbir.gov/public/api/solicitations</span></td><td>Documented JSON: solicitation + nested topics/subtopics with descriptions</td><td><span class="chip bad">403/429</span></td><td><span class="chip bad">403</span></td><td>Nothing. Server returns <code>{"message":"Forbidden"}</code> even in a real browser. Docs banner: "APIs are currently undergoing maintenance". Agency code is now <code>DOW</code>, not <code>DOD</code>.</td><td>Not a tool problem. Monitor for return; when it is back it is the cleanest civilian feed.</td></tr>
+</tbody></table></div>
+
+<h3>B. DoD component sites</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Source</th><th>Posts</th><th>WebFetch</th><th>What you get</th><th>Unique vs DSIP</th></tr></thead>
+<tbody>
+<tr><td class="src">Navy<span class="u">navysbir.com/topics26_5.htm · /n26_5/{TOPIC}.htm</span></td><td>All Navy topics per release, static HTML, predictable URL scheme (<code>topics{FY}_{R}.htm</code>, STTR <code>topics26_1s.htm</code>, archive <code>/previous.htm</code>)</td><td><span class="chip ok">FULL</span></td><td>Index: code, title, SYSCOM, type (SBIR/D2P2/STTR/CSO), Q&amp;A-available marker, removed-topic notices. Detail: full objective/description/phases, keywords, references, TPOC names, dates. Instruction PDFs at <code>navysbir.com/docs/NAVY_SBIR_26BZ_DP2_R5.pdf</code></td><td>Crawlable without login; SYSCOM attribution; release status bulletins. Q&amp;A link goes to DSIP login (but DSIP public questions endpoint works without login).</td></tr>
+<tr><td class="src">Army<span class="u">armysbir.army.mil/topics/{slug}/ · /announcement_category/topic-releases/feed/</span></td><td>Topic pages + release announcements</td><td><span class="chip warn">PARTIAL</span></td><td>Detail pages: full text, phases, keywords, references, $ cap, duration. <strong>Working RSS</strong> for topic-release announcements. <code>/topics/</code> list is a JS shell; <code>/wp-json/</code> 401; no sitemap.</td><td>No TPOC, no ITAR. Discovery path is RSS → announcement → slug. Not a reliable enumerator.</td></tr>
+<tr><td class="src">Army xTech<span class="u">xtech.army.mil</span></td><td>Prize competitions / CSO topics (Phantum, Inversion, Kinetic Reach, Search 10)</td><td><span class="chip ok">FULL</span></td><td>Competition name, status, dates, prize tiers, eligibility, RFI PDF link, TRL requirement</td><td>Yes. xTech topics appear on DSIP as ARM26BX*-NP* CSO entries but the RFI/prize detail is only here.</td></tr>
+<tr><td class="src">AFWERX / SpaceWERX<span class="u">afwerx.com/divisions/sbir-sttr/open-topic/ · spacewerx.us/get-funded/</span></td><td>Release calendar, Phase I caps, STRATFI/TACFI NOO, webinars + slide PDFs</td><td><span class="chip warn">PARTIAL</span></td><td>Dates and caps only. <strong>No DAF/USSF topic numbers are listed anywhere on AFWERX.</strong> <code>/specific-topic/</code> is stale (25.4 R12). <code>/test/v2/get-funded/</code> robots-blocked.</td><td>DAF topics (10 open today) are only on DSIP. Webinar recordings/slides and TACFI NOO (open 6/5/26, rolling, $375K to $2M) are unique.</td></tr>
+<tr><td class="src">DARPA<span class="u">darpa.mil/work-with-us/communities/small-business/sbir-sttr-topics · darpa.mil/rss/opportunities.xml</span></td><td>DARPA topics table + RSS</td><td><span class="chip warn">PARTIAL</span></td><td>Code, title, office, one-line objective, dates, instruction PDF link. RSS items prefixed "SBIR:"/"STTR:" but link to a hub page.</td><td>Closed-topic history, Phase I templates/FAQ. Full text still on DSIP.</td></tr>
+<tr><td class="src">SOFWERX<span class="u">events.sofwerx.org</span></td><td>Collaboration events, RFIs, assessment events (OTA/CRADA/prize)</td><td><span class="chip ok">FULL</span></td><td>Event, phase dates, deadline, funding vehicle, problem statement, POC email</td><td>Yes, non-SBIR adjacent channel (e.g. PEO-M USV Poseidon's Fury, AE submissions 9/14 to 10/2/26).</td></tr>
+<tr><td class="src">DHA<span class="u">health.mil/...Small-Business-Innovation-Research-Program</span></td><td>Program page</td><td><span class="chip bad">BLOCKED</span></td><td>robots.txt for WebFetch; blank page in Chrome</td><td>DHA topics are on DSIP. Nothing lost.</td></tr>
+<tr><td class="src">MDA · SOCOM · DLA · NGA · DMEA · DTRA · OSD · DISA</td><td>Program pages only</td><td><span class="chip na">N/A</span></td><td>Contacts, caps, timelines (NGA Ph I $256,580 / 6 to 9 mo). MDA <code>small_business.html</code> SSL cert failure; DTRA/JSTO stale at FY23; CBD domain cbdsbir.net redirects to an unrelated site.</td><td>All defer to DSIP. No topic data exists off-DSIP.</td></tr>
+<tr><td class="src">DIU<span class="u">diu.mil/work-with-us/open-solicitations</span></td><td>CSOs (not SBIR)</td><td><span class="chip ok">FULL</span></td><td>"Currently, there are no opportunities open"</td><td>Adjacent channel, empty today.</td></tr>
+</tbody></table></div>
+
+<h3>C. Civilian agencies</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Agency</th><th>Canonical source</th><th>WebFetch</th><th>Open now?</th><th>What you get</th><th>Gap / where full text lives</th></tr></thead>
+<tbody>
+<tr><td class="src">NSF</td><td><span class="u">seedfund.nsf.gov/topics/{slug}/ · nsf.gov/.../nsf26-510/solicitation</span></td><td><span class="chip ok">FULL</span></td><td>Yes (11/4/26)</td><td>31 topics, all subtopics with descriptions, $305K / 6 to 18 mo, eligibility, solicitation text (HTML)</td><td><code>/topics/</code> index 404; enumerate via <code>/what-we-fund/</code>. No TPOC names.</td></tr>
+<tr><td class="src">NIH / CDC / FDA</td><td><span class="u">seed.nih.gov · simpler.grants.gov/search?query=SBIR · files.simpler.grants.gov/...</span></td><td><span class="chip ok">FULL</span> (grants) <span class="chip bad">BLOCKED</span> (contracts)</td><td>Yes (9/5/26)</td><td>PA-27-100 / -102 full NOFO HTML via simpler.grants.gov mirror. grants.nih.gov pages 404/redirector.</td><td>NIH contract topics (PHS solicitation) live on SAM.gov + eCPS; seed.nih.gov contracts page is stale (PHS 2025-1). NCI 75N98026R00109 only via SAM.</td></tr>
+<tr><td class="src">NASA</td><td><span class="u">nasa.gov/sbir_sttr/ (302 from sbir.nasa.gov) · appendix PDFs under nasa.gov/wp-content/uploads/</span></td><td><span class="chip ok">FULL</span> (PDF)</td><td>No (26A/26B closed 5/21; next TBA)</td><td>Appendix PDFs readable: subtopic number, title, scope. BAA 80NSSC26R0003 valid to 9/30/27.</td><td>Subtopics are PDF-only. SAM notice is a JS shell. ProSAMS not reachable.</td></tr>
+<tr><td class="src">DOE Office of Science</td><td><span class="u">science.osti.gov/sbir/Funding-Opportunities</span></td><td><span class="chip warn">PARTIAL</span></td><td>No (FY27 Ph I expected summer 2026, not posted)</td><td>Landing page only, stale at FY25.</td><td><strong>All sub-pages return 403</strong> (FY-2026, FY-2027, Closed-FOAs, webinar PDFs). simpler.grants.gov <code>agency=DOE</code> returns 0. Topic PDFs under <code>/-/media/sbir/pdf/TechnicalTopics/</code> readable when you know the URL.</td></tr>
+<tr><td class="src">ARPA-E</td><td><span class="u">arpa-e-foa.energy.gov</span></td><td><span class="chip ok">FULL</span></td><td>No (companion SBIR/STTR FOAs closed or TBD)</td><td>FOA list, dates, PDFs</td><td>Runs SBIR as companion FOAs to program FOAs; watch eXCHANGE.</td></tr>
+<tr><td class="src">USDA NIFA</td><td><span class="u">nifa.usda.gov/grants/programs/sbir-sttr · apply07.grants.gov/grantsws/rest/opportunity/att/download/{id}</span></td><td><span class="chip ok">FULL</span> (PDF)</td><td>No (FY26 TBD)</td><td>13 topic areas with NPL contact names; last RFA PDF (FY25) readable via Grants.gov attachment REST</td><td>Nothing current posted.</td></tr>
+<tr><td class="src">NIST</td><td><span class="u">nist.gov/tpo/small-business-innovation-research-program-sbir</span></td><td><span class="chip ok">FULL</span></td><td>No ("no active FY26/FY27 Phase I")</td><td>Status text, FY25 NOFO PDF</td><td>Nothing current.</td></tr>
+<tr><td class="src">NOAA</td><td><span class="u">techpartnerships.noaa.gov/sbir/</span></td><td><span class="chip ok">FULL</span></td><td>No (FY27 cycle "fall 2026")</td><td>Status text only</td><td>NOFO will post here + Grants.gov.</td></tr>
+<tr><td class="src">DOT</td><td><span class="u">volpe.dot.gov (solicitation PDF at volpe.dot.gov/media/306)</span></td><td><span class="chip ok">FULL</span> (PDF)</td><td>No (FY26 closed 7/7/26)</td><td>Solicitation #, topics (26-FH1, 26-FR1, 26-FT1), $200K / 6 mo, dotsbir@dot.gov</td><td><code>transportation.gov/sbir</code> 404. PDF-only topics.</td></tr>
+<tr><td class="src">DHS</td><td><span class="u">dhs.gov/science-and-technology/sbir · sbir2.st.dhs.gov</span></td><td><span class="chip warn">PARTIAL</span></td><td>No (typical Oct to Dec)</td><td>Generic program text</td><td>Portal <code>sbir2.st.dhs.gov</code> DNS fails. Topics historically via SAM.gov + portal.</td></tr>
+<tr><td class="src">EPA</td><td><span class="u">epa.gov/sbir-funding-opportunities</span></td><td><span class="chip ok">FULL</span></td><td>No (page stale: "anticipated June 2025")</td><td>Historical topics, $100K / 6 mo, FedConnect submission</td><td>Contracts via SAM.gov/FedConnect.</td></tr>
+<tr><td class="src">ED (IES)</td><td><span class="u">ies.ed.gov/funding/research/programs/small-business-innovation-research-sbir</span></td><td><span class="chip ok">FULL</span></td><td>No (FY26 91990026R0003/4/5 closed 6/29/26; page still says "Open")</td><td>Solicitation numbers, dates, $250K / 9 mo</td><td>Full solicitations on SAM.gov only (JS shell).</td></tr>
+</tbody></table></div>
+
+<h3>D. Aggregators, APIs, feeds</h3>
+<div class="tablewrap"><table>
+<thead><tr><th>Source</th><th>Reachable</th><th>Coverage</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td class="src">SAM.gov<span class="u">sam.gov/search · api.sam.gov/opportunities/v2/search</span></td><td>Search UI: robots-blocked for WebFetch, renders in Chrome. Notice pages: JS shell. API: 404 without a valid key (DEMO_KEY rejected).</td><td>Contract-type SBIR solicitations: NASA, ED, DOT, DHS, EPA, NIH/NCI contracts, ARPA-H, DoD BAA master notice (W5170126R0001)</td><td><span class="chip warn">NEEDS YOUR KEY</span> You already have <code>SAM_API_KEY</code> and <code>sam_search.py</code>. Add <code>resourceLinks</code> download (needs api_key on the file URL) to pull attachments.</td></tr>
+<tr><td class="src">Grants.gov<span class="u">api.grants.gov/v1/api/search2 (POST, no auth) · simpler.grants.gov · apply07.grants.gov/grantsws/rest/opportunity/att/download/{id}</span></td><td>search2 needs POST (WebFetch GET → 403). simpler.grants.gov is server-rendered and searchable. Attachment REST works by GET. Legacy search UI is a JS shell. RSS URLs returned HTML.</td><td>Grant-type SBIR: NIH, NSF, DOE, USDA, ED (grants), NIEHS</td><td><span class="chip warn">PARTIAL</span> One 20-line POST client closes this. Daily full extract also exists: <code>prod-grants-gov-chatbot.s3.amazonaws.com/extracts/GrantsDBExtract{YYYYMMDD}v2.zip</code>.</td></tr>
+<tr><td class="src">Federal Register JSON<span class="u">federalregister.gov/api/v1/documents.json?conditions[term]=SBIR</span></td><td>Yes, real JSON, no key</td><td>Regulatory notices only; no topic solicitations</td><td><span class="chip na">N/A</span></td></tr>
+<tr><td class="src">Army topic-release RSS<span class="u">armysbir.army.mil/announcement_category/topic-releases/feed/</span></td><td>Yes, RSS 2.0, 10 items</td><td>Army release announcements</td><td><span class="chip ok">USEFUL</span> as a change trigger</td></tr>
+<tr><td class="src">DARPA RSS<span class="u">darpa.mil/rss/opportunities.xml</span></td><td>Yes</td><td>DARPA SBIR/STTR items by title prefix</td><td><span class="chip ok">USEFUL</span> as a change trigger</td></tr>
+<tr><td class="src">BW&amp;CO Release 5 page<span class="u">bwcoconsulting.com/programs/dow-sbir-sttr-release-5</span></td><td>Yes</td><td>All 51 Release 5 topics (44 SBIR + 7 STTR) with numbers + titles + component; own summary pages</td><td><span class="chip warn">CROSS-CHECK ONLY</span> Consultant site; useful for counting, not authoritative.</td></tr>
+<tr><td class="src">Granted AI</td><td>Site yes; API 401 without key ($149/mo Starter)</td><td>Solicitation-level, not per-topic; stale (latest DoD item Release 2)</td><td><span class="chip na">SKIP</span></td></tr>
+<tr><td class="src">HigherGov</td><td>Per-topic pages exist (topic #, NAICS/PSC, description) behind a free-view paywall; index 404; API docs JS shell; $500/yr Starter</td><td>DoD topics mirrored from DSIP, no TPOC/Q&amp;A</td><td><span class="chip na">SKIP</span> unless you want a paid fallback for DSIP</td></tr>
+<tr><td class="src">GovTribe</td><td>JS shell; API subscription-only ($1,500/yr+)</td><td>SAM mirrors</td><td><span class="chip na">SKIP</span></td></tr>
+<tr><td class="src">Team 80 / Funding Landscape / Defense Grant Writers</td><td>Yes</td><td>Calendar-level dates only</td><td><span class="chip na">Calendar cross-check only</span></td></tr>
+<tr><td class="src">SBIR.gov awards CSV<span class="u">data.www.sbir.gov/awarddatapublic/award_data.csv (290 MB)</span></td><td>Yes</td><td>Award history, not open topics (already in paul.duckdb)</td><td><span class="chip na">N/A for this task</span></td></tr>
+</tbody></table></div>
+
+<h2 id="s5"><span class="n">5</span>Field-level coverage matrix</h2>
+<p class="small">Y = obtainable today from that source with the tool noted in section 4. Chrome-only sources are marked (C). Blank = field does not exist there.</p>
+<div class="tablewrap"><table class="matrix">
+<thead><tr><th>Field</th><th>DSIP API (C)</th><th>SBIR.gov HTML</th><th>navysbir.com</th><th>armysbir</th><th>Federal Atlas</th><th>NSF seedfund</th></tr></thead>
+<tbody>
+<tr><td>Topic code (DAF26BZ05-NV026)</td><td>Y</td><td>Y (detail only)</td><td>Y</td><td>Y</td><td>null</td><td>Y</td></tr>
+<tr><td>Title</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>Component / command / SYSCOM</td><td>Y</td><td>branch only</td><td>Y</td><td>Army</td><td>null</td><td></td></tr>
+<tr><td>Release # / cycle name</td><td>Y</td><td>26.BZ only</td><td>Y</td><td>Y</td><td>—</td><td></td></tr>
+<tr><td>Pre-release / open / close dates</td><td>Y (epoch ms)</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>Q&amp;A window dates</td><td>Y</td><td>—</td><td>Y (close)</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>Status (Pre-Release / Open)</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td><td>Y</td></tr>
+<tr><td>Program (SBIR/STTR) + D2P2 flag</td><td>Y (phaseHierarchy)</td><td>Y (title prefix / phase)</td><td>Y</td><td>Y</td><td>Y / prefix</td><td>Y</td></tr>
+<tr><td>Full description</td><td>Y</td><td>1 paragraph</td><td>Y</td><td>Y</td><td>250 chars</td><td>Y</td></tr>
+<tr><td>Objective</td><td>Y</td><td>—</td><td>Y</td><td>Y</td><td>—</td><td></td></tr>
+<tr><td>Phase I / II / III text</td><td>Y</td><td>—</td><td>Y</td><td>Y</td><td>—</td><td></td></tr>
+<tr><td>Keywords</td><td>Y</td><td>—</td><td>Y</td><td>Y</td><td>—</td><td></td></tr>
+<tr><td>References / reference docs</td><td>Y (+ uploads)</td><td>—</td><td>Y</td><td>Y</td><td>—</td><td></td></tr>
+<tr><td>Technology areas / focus areas</td><td>Y</td><td>—</td><td>CTA line</td><td>tech ecosystem</td><td>—</td><td></td></tr>
+<tr><td>ITAR flag</td><td>Y (boolean)</td><td>—</td><td>in instr. PDF</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>CMMC level</td><td>Y</td><td>—</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>TPOC name / email</td><td>Y pre-release only</td><td>—</td><td>Y (names)</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>Published Q&amp;A text</td><td>Y</td><td>—</td><td>marker only</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>Topic PDF</td><td>Y</td><td>—</td><td>—</td><td>—</td><td>—</td><td></td></tr>
+<tr><td>Instruction / preface PDFs</td><td>Y</td><td>—</td><td>Y (Navy)</td><td>link</td><td>—</td><td>solicitation HTML</td></tr>
+<tr><td>Award cap / duration</td><td>in PDFs</td><td>—</td><td>in PDFs</td><td>Y</td><td>—</td><td>Y</td></tr>
+</tbody></table></div>
+
+<h2 id="s6"><span class="n">6</span>DSIP public API, as observed through your browser</h2>
+<div class="callout">Captured from the live network log of <code>dodsbirsttr.mil/topics-app/</code> and confirmed by calling each endpoint with same-origin <code>fetch()</code>. No login, no token, no cookie was required for any of these. This is the single most valuable finding of the audit.</div>
+<pre>BASE  https://www.dodsbirsttr.mil/topics/api/public
+
+GET /topics/solicitations
+    → { active:[...], archived:[...] }   each: solicitationCycleId, program, title ("DoD SBIR 2025.1"),
+      cycleName ("DOD_SBIR_2025_P1_C1"), solicitationNumber ("25.1"), startDate, endDate, year
+
+GET /baa/filter/release?solicitationIds=openTopics&amp;valueAsNumber=Y&amp;searchByCycleName=Y
+    → release numbers available for the filter
+
+GET /topics/search?searchParam={URL-encoded JSON}&amp;size=100&amp;page=0
+    searchParam = {"searchText":null,"components":null,"programYear":null,
+                   "solicitationCycleNames":["openTopics"],"releaseNumbers":[],
+                   "topicReleaseStatus":[591,592],        // 591 = Pre-Release, 592 = Open (inferred from UI filter)
+                   "modernizationPriorities":[],"sortBy":"finalTopicCode,asc",
+                   "technologyAreaIds":[],"component":null,"program":null}
+    → { total:60, data:[ {
+         topicId ("9aeb4d6990be49b3be172f9115de67e8_86609"), topicCode, topicTitle, topicStatus,
+         component ("USAF"), command ("AFMC"), program ("SBIR"), solicitationNumber ("26.BX"),
+         solicitationTitle, cycleName ("DOD_SBIR_2026_P1_CBX"), releaseNumber (5),
+         topicPreReleaseStartDate, topicPreReleaseEndDate, topicStartDate, topicEndDate   // epoch ms
+         topicQAStartDate, topicQAEndDate, topicQATpocStartDate, topicQATpocEndDate,
+         topicQAStatus, topicQAStatusDisplay, topicQAOpen, topicQuestionCount, noOfPublishedQuestions,
+         cmmcLevel ("Level 2 (Self)"), phaseHierarchy (JSON string: D2PII / II / SPII / I config),
+         showTpoc (bool), topicManagers ([{name,email,phone,center,assignmentType:"TPOC",emailDisplay}] | null),
+         baaPrefaceUploadId, baaPrefaceUploadTitle, isReleasePreface,
+         baaInstructions [{uploadId, fileName ("Army_26.BX_R1.pdf"), uploadTypeCode, versionNumber, updateDate}],
+         applicableActions } ] }
+    Observed: size=100 returns all 60 in one page. First call from the app returned HTTP 503 once, then 200.
+
+GET /topics/{topicId}/details
+    → { topicId, objective, description, phase1Description, phase2Description, phase3Description   // HTML
+        keywords (string), itar (bool), cmmcLevel, technologyAreas[], focusAreas[],
+        referenceDocuments [{uploadId, referenceType ("REFERENCE_TEXT"|upload), referenceTitle, url}] }
+
+GET /topics/{topicId}/questions
+    → [ { questionId, questionNo, question (HTML), questionSubmittedOn, questionStatus ("COMPLETED"),
+          questionStatusDisplay, answers:[...] } ]      // 34 published Q&amp;A on ARM26BX03-NP006; [] if none
+
+GET /topics/{topicId}/download/PDF          → application/pdf (topic sheet; content-type header says json, body is %PDF-1.7)
+GET /topics/download?uploadId={id}&amp;uploadType=PUBLIC_TOPICS_REFERENCE_DOCUMENTS   → reference attachment
+
+BASE2 https://www.dodsbirsttr.mil/submissions/api/public
+GET /download/solicitationDocuments?solicitation=DOD_SBIR_2026_P1_CBZ&amp;release=5&amp;documentType=RELEASE_INSTRUCTIONS[&amp;component=NAVY]
+GET /download?uploadId={base64 numeric id}&amp;showOnWeb=true&amp;fileName=...            → instruction / preface PDFs
+
+UI deep link: https://www.dodsbirsttr.mil/topics-app/?baa=DOD_SBIR_2026_P1_CBZ</pre>
+<ul>
+  <li><strong>Unverified:</strong> whether these endpoints accept requests from a non-browser client (Python <code>requests</code>) without a WAF challenge. The site is an Angular app on what looks like a standard Java backend; no Akamai/Cloudflare challenge was visible in the network log. First build step is a 5-minute test from your machine with a browser User-Agent header. If it is blocked, fall back to Playwright (Chromium) on solomon, which is guaranteed to work since your Chrome already does.</li>
+  <li>Archived cycles are enumerable from <code>/topics/solicitations</code> (<code>archived[]</code>) so the same collector backfills history for training your filter.</li>
+</ul>
+
+<h2 id="s7"><span class="n">7</span>Gap register</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>#</th><th>Gap</th><th>Impact</th><th>Severity</th><th>Closed by</th></tr></thead>
+<tbody>
+<tr><td>G1</td><td>No programmatic access to DSIP from any agent-runnable environment</td><td>Cannot enumerate DoD topics (the bulk of your targets) without a human-driven browser; no TPOC, Q&amp;A, ITAR, CMMC, tech areas, PDFs</td><td><span class="chip bad">CRITICAL</span></td><td>Tool 1</td></tr>
+<tr><td>G2</td><td>TPOC data is time-boxed to pre-release and not captured anywhere else</td><td>Lose the primary differentiator you identified (pre-release TPOC contact) unless collection runs during the window</td><td><span class="chip bad">CRITICAL</span></td><td>Tool 1 scheduled daily; Tool 5 alert on new pre-release</td></tr>
+<tr><td>G3</td><td>No raw-data access via WebFetch (summaries only, robots.txt enforced)</td><td>Everything scraped through WebFetch is lossy and unverifiable; unusable as the base for a semantic filter you must trust</td><td><span class="chip bad">HIGH</span></td><td>Tools 1 to 4 write structured JSON to disk; agents read files, not web</td></tr>
+<tr><td>G4</td><td>SBIR.gov JSON API down (server 403); Federal Atlas mirror lags and truncates</td><td>No clean cross-agency feed; civilian coverage must be assembled per agency</td><td><span class="chip warn">HIGH</span></td><td>Tool 2 (HTML scraper) now; swap to API when it returns</td></tr>
+<tr><td>G5</td><td>SAM.gov-only solicitations (NASA, ED, DOT, DHS, EPA, NIH contracts, ARPA-H) unreachable without your API key; attachments need key on download</td><td>Contract-type civilian SBIRs invisible from the cloud</td><td><span class="chip warn">MEDIUM</span> (few are open now)</td><td>Tool 3 (extend sam_search.py) run via device_bash</td></tr>
+<tr><td>G6</td><td>Grants.gov search2 is POST-only; NSF/NIH/DOE/USDA grant NOFOs only via simpler.grants.gov HTML</td><td>Grant-type SBIRs require a separate client</td><td><span class="chip warn">MEDIUM</span></td><td>Tool 3</td></tr>
+<tr><td>G7</td><td>Topic text locked in PDFs (NASA appendices, DOT, USDA RFA, DoD instruction PDFs with per-topic ITAR / classification notes)</td><td>Semantic filter misses constraints that only appear in PDFs</td><td><span class="chip warn">MEDIUM</span></td><td>Tool 4</td></tr>
+<tr><td>G8</td><td>DOE OSTI sub-pages 403; DHS portal DNS fail; sbir.gov blocked in your Chrome extension permissions; DHA blank</td><td>Small; nothing open from these today</td><td><span class="chip na">LOW</span></td><td>Tool 5 monitors landing pages; grant sbir.gov in extension</td></tr>
+<tr><td>G9</td><td>Your local tooling (sam_search.py, paul.duckdb, .env keys, local sbir-search MCP) not reachable from this session</td><td>Cannot run or test any of it from Cowork</td><td><span class="chip warn">MEDIUM</span></td><td>Connect <code>Projects</code> folder; expose local MCP</td></tr>
+<tr><td>G10</td><td>No change-detection layer; DSIP has no RSS/listserv URL</td><td>New pre-release topics and topic amendments/removals (e.g. DON26BZ05-NV079 removed) go unnoticed between manual checks</td><td><span class="chip warn">MEDIUM</span></td><td>Tool 5</td></tr>
+</tbody></table></div>
+
+<h2 id="s8"><span class="n">8</span>Build spec, in priority order</h2>
+
+<h3><span class="prio">TOOL 1</span> DSIP collector (Python, runs on solomon, daily + on demand)</h3>
+<ul>
+  <li>Inputs: none. Config: cycle filter (default <code>openTopics</code> + explicit archived cycles for backfill).</li>
+  <li>Steps: <code>/topics/solicitations</code> → <code>/topics/search</code> (size=100, page through) → per topic <code>/details</code>, <code>/questions</code>, <code>/download/PDF</code>, every <code>referenceDocuments[].uploadId</code>, every <code>baaInstructions[].uploadId</code> and the release preface. Strip HTML to text; keep raw HTML too. Convert epoch ms to ISO with ET offset.</li>
+  <li>Storage: one JSON per topic (<code>{topicCode}.json</code>) + PDFs in a folder + a DuckDB table (<code>dsip_topics</code>) outside PaulPipeline. Snapshot per run; diff runs to detect new pre-release topics, TPOC appearance, Q&amp;A additions, removals, date changes.</li>
+  <li>Headers: browser UA, <code>Accept: application/json</code>, <code>Referer: https://www.dodsbirsttr.mil/topics-app/</code>. Retry 503 with backoff (observed). Throttle ~1 req/s.</li>
+  <li>Fallback if WAF blocks non-browser clients: Playwright Chromium on solomon executing the same <code>fetch()</code> calls in-page (proven to work today).</li>
+  <li>Expose as an MCP server (<code>list_open_topics</code>, <code>get_topic</code>, <code>get_qa</code>, <code>diff_since</code>) so Cowork agents query the local store instead of the web. Use the mcp-builder skill.</li>
+  <li>Effort: 1 to 2 days. Covers ARMY, NAVY, USAF/USSF, DARPA, OSD, DMEA, DTRA, DHA, MDA, SOCOM, DLA, NGA, CBD, DISA. This is ~90% of your target universe.</li>
+</ul>
+
+<h3><span class="prio">TOOL 2</span> SBIR.gov topics scraper (cross-agency cross-check)</h3>
+<ul>
+  <li><code>GET sbir.gov/topics?status=Open&amp;page={0..N}</code> (10 rows/page, zero-indexed; 34 pages today) then <code>GET sbir.gov/topics/{id}</code> for each. Parse labeled fields: Topic Number, Funding Agency, Branch, Program, Phase, Solicitation Number, Release/Open/Close, Description.</li>
+  <li>Purpose: (a) catch anything DSIP missed, (b) the only place NSF/HHS/NCI topics are listed in one table, (c) reconcile counts (337 vs 60 DSIP vs 305 Federal Atlas). Try <code>export=csv</code> with full filter params in a real browser; if it downloads, one request replaces the crawl.</li>
+  <li>When <code>api.www.sbir.gov/public/api/solicitations?open=1</code> stops returning 403, switch to it (nested topics/subtopics with descriptions, <code>agency=DOW</code>).</li>
+  <li>Effort: half a day.</li>
+</ul>
+
+<h3><span class="prio">TOOL 3</span> Contract + grant portal clients (SAM.gov, Grants.gov)</h3>
+<ul>
+  <li>SAM: extend <code>sam_search.py</code>: query <code>q=SBIR OR STTR</code>, <code>ptype=o,p,s,k</code>, posted last 60 days; for each hit pull <code>resourceLinks[]</code> with <code>?api_key=</code> appended and save attachments. Watch NAICS 541715/541714 + PSC AN*/AJ*. This is where NASA appendices, ED, DOT, DHS, EPA, NIH/NCI contracts, ARPA-H appear.</li>
+  <li>Grants.gov: POST <code>api.grants.gov/v1/api/search2</code> body <code>{"keyword":"SBIR","oppStatuses":"posted|forecasted","rows":200}</code> → <code>oppHits[]</code>; for each, fetch <code>/v1/api/fetchOpportunity</code> (POST <code>{"opportunityId":id}</code>; documented, not tested here since WebFetch cannot POST) for synopsis + attachment ids, then GET <code>apply07.grants.gov/grantsws/rest/opportunity/att/download/{id}</code>. Covers NSF, NIH, DOE, USDA, ED grants, NIEHS.</li>
+  <li>Effort: 1 day total (SAM half is mostly written).</li>
+</ul>
+
+<h3><span class="prio">TOOL 4</span> PDF text pipeline</h3>
+<ul>
+  <li>pdfplumber/pymupdf over every PDF from Tools 1 to 3. Per DoD instruction PDF: extract the per-topic ITAR / "may become classified" / D2P2 / award-cap lines and attach them to the topic record. Per NASA appendix: split into subtopics by the <code>XXX.1.S26A</code> code pattern. Per DOT/USDA/DOE topic docs: split by topic number.</li>
+  <li>Output: markdown per document + structured fields merged into the topic JSON so the semantic filter sees one document per topic.</li>
+  <li>Effort: 1 day.</li>
+</ul>
+
+<h3><span class="prio">TOOL 5</span> Agency page monitors + change alerts</h3>
+<ul>
+  <li>Poll and hash: Army RSS, DARPA RSS, navysbir.com home + current <code>topics26_R.htm</code>, AFWERX open-topic + SpaceWERX get-funded, xTech competitions, SOFWERX events, NSF seedfund what-we-fund, seed.nih.gov funding page, nasa.gov/sbir_sttr, science.osti.gov/sbir (landing only), volpe.dot.gov, ies.ed.gov, epa.gov/sbir-funding-opportunities, nist.gov TPO, NOAA, dhs.gov S&amp;T SBIR, nifa.usda.gov, arpa-e-foa.energy.gov, DIU open solicitations.</li>
+  <li>Trigger Tool 1 immediately on the first Wednesday of each month and daily during pre-release; Telegram (existing skill) on: new pre-release topic, TPOC visible, new published Q&amp;A on a tracked topic, topic removed/amended, new civilian solicitation.</li>
+  <li>Effort: 1 to 2 days.</li>
+</ul>
+
+<h3>Zero-code fixes, do these first</h3>
+<ul>
+  <li>Connect <code>C:\Users\bmbre\OneDrive\Desktop\Projects</code> in the Cowork "Add folder" dialog so device_bash can run your scripts and read <code>.env</code>. Until then nothing on solomon is usable from here.</li>
+  <li>Grant <code>sbir.gov</code>, <code>sam.gov</code>, <code>grants.gov</code>, <code>simpler.grants.gov</code> in the Claude-in-Chrome extension site permissions.</li>
+  <li>If the local sbir-search MCP already wraps DSIP, publish it to Cowork and skip most of Tool 1.</li>
+  <li>Do not pay for HigherGov/GovTribe/Granted AI. None carries TPOC or Q&amp;A, and all are downstream of DSIP/SBIR.gov which you will own directly.</li>
+</ul>
+
+<h3>Agent-fleet architecture once the tools exist</h3>
+<ul>
+  <li>Collectors write one normalized JSON per topic (schema: id, code, agency, component, program, phase, dates, status, itar, cmmc, text blocks, keywords, tech areas, tpoc, qa[], pdf_paths[], source_urls[]) to a local store + DuckDB. Agents never touch the web.</li>
+  <li>Stage 1 (cheap, deterministic): hard filters from the project rubric (ITAR-only, classified, D2P2-only, TRL, facility keywords) in SQL. Stage 2: one agent per surviving topic scores Technical Fit / Feasibility / Strategic / Competition and emits the spreadsheet row. Stage 3: a completeness agent reconciles counts against SBIR.gov and BW&amp;CO totals so a miss is detectable, not silent.</li>
+  <li>Volume is small: 60 DoD topics per month plus ~30 civilian items per quarter. Per-topic agents are affordable; the risk is stale data, not compute.</li>
+</ul>
+
+<h2 id="s9"><span class="n">9</span>Caveats on this audit</h2>
+<ul>
+  <li>Every WebFetch result was a model summary; where an agent reported a field absent, the field may exist but was dropped by the summarizer. The DSIP field lists in section 6 are exempt: they came from raw JSON in your browser.</li>
+  <li>Topic counts: DSIP 60 (56 open + 4 pre-release, includes CSO/xTech entries and future-dated releases); BW&amp;CO 51 for Release 5 proper; SBIR.gov 337 open across all agencies; Federal Atlas 305. I did not reconcile them one-to-one; Tool 2 will.</li>
+  <li>DSIP status codes 591/592 are inferred from the UI filter (Pre-Release, Open checked). Verify by toggling filters and re-reading the network log.</li>
+  <li>The topicId format (hash_number) suggests IDs are not stable across cycles; key your store on topicCode.</li>
+  <li>The cloud shell could technically reach these hosts; I did not use it because this session's policy forbids routing around WebFetch blocks. That restriction does not apply to scripts you run on solomon.</li>
+  <li>No aggregator or agency site has been checked for FY27 civilian releases that post after today; Tool 5 exists for that reason.</li>
+</ul>
+
+<h2 id="s10"><span class="n">10</span>Sources</h2>
+<ul class="small">
+  <li><a href="https://www.crowell.com/en/insights/client-alerts/sbirsttr-programs-reauthorized-after-six-month-lapse">Crowell &amp; Moring: SBIR/STTR reauthorized after six-month lapse</a></li>
+  <li><a href="https://fundinglandscape.com/answers/sbir-sttr-reauthorization-2026">Funding Landscape: reauthorization and what is open (updated 2026-08-15)</a></li>
+  <li><a href="https://www.afrl.af.mil/News/Article-Display/Article/4473004/afwerx-spacewerx-open-new-sbirsttr-solicitations-following-reauthorization/">AFRL: AFWERX/SpaceWERX open new solicitations following reauthorization</a></li>
+  <li><a href="https://www.dodsbirsttr.mil/topics-app/">DSIP Topics and Topic Search</a> (via Chrome)</li>
+  <li><a href="https://www.sbir.gov/topics">SBIR.gov topic search</a> · <a href="https://www.sbir.gov/api/solicitation">SBIR.gov solicitation API docs</a></li>
+  <li><a href="https://www.navysbir.com/topics26_5.htm">Navy SBIR 26.5 topic index</a> · <a href="https://armysbir.army.mil/announcement_category/topic-releases/feed/">Army topic-release RSS</a> · <a href="https://www.darpa.mil/rss/opportunities.xml">DARPA opportunities RSS</a></li>
+  <li><a href="https://afwerx.com/divisions/sbir-sttr/open-topic/">AFWERX open topic</a> · <a href="https://spacewerx.us/get-funded/">SpaceWERX get funded</a> · <a href="https://xtech.army.mil/">Army xTech</a> · <a href="https://events.sofwerx.org/">SOFWERX events</a></li>
+  <li><a href="https://seedfund.nsf.gov/what-we-fund/">NSF seedfund topics</a> · <a href="https://seed.nih.gov/">NIH SEED</a> · <a href="https://simpler.grants.gov/search?query=SBIR">simpler.grants.gov SBIR search</a> · <a href="https://www.nasa.gov/sbir_sttr/">NASA SBIR/STTR</a> · <a href="https://science.osti.gov/sbir/Funding-Opportunities">DOE SC SBIR</a> · <a href="https://www.volpe.dot.gov/">DOT Volpe</a> · <a href="https://ies.ed.gov/funding/research/programs/small-business-innovation-research-sbir">ED IES SBIR</a></li>
+  <li><a href="https://www.grants.gov/api">Grants.gov API docs</a> · <a href="https://www.federalregister.gov/api/v1/documents.json?conditions[term]=SBIR">Federal Register JSON</a> · <a href="https://www.bwcoconsulting.com/programs/dow-sbir-sttr-release-5">BW&amp;CO Release 5 topic list</a> · <a href="https://team-80.com/blog/sbir-deadlines/">Team 80 deadlines</a> · <a href="https://grantedai.com/blog/sbir-sttr-deadlines-calendar-2026">Granted AI calendar</a></li>
+</ul>
+</div>
+
+</body></html>

@@ -1,0 +1,136 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style><title>SO101 Speed Loop</title></head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f6f2; --panel:#ecEEe7; --ink:#1c221f; --ink2:#4a534e; --rule:#cfd4cc;
+  --acc:#0e6e6b; --acc-ink:#0b5654; --warn:#b3550f; --crit:#a3261e; --good:#2f7a3a;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --disp:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2320; --ink:#e6e9e3; --ink2:#a5ada6; --rule:#343c37;
+  --acc:#4fb5b0; --acc-ink:#7fd0cb; --warn:#e08a45; --crit:#e2645a; --good:#6cbf76;}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2320; --ink:#e6e9e3; --ink2:#a5ada6; --rule:#343c37;
+  --acc:#4fb5b0; --acc-ink:#7fd0cb; --warn:#e08a45; --crit:#e2645a; --good:#6cbf76;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0}
+main{max-width:76ch;margin:0 auto;padding:40px 22px 80px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc-ink)}
+h1{font-family:var(--disp);font-weight:600;font-size:40px;line-height:1.05;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--disp);font-weight:600;font-size:24px;margin:44px 0 10px;text-wrap:balance;padding-top:14px;border-top:1px solid var(--rule)}
+h3{font-family:var(--disp);font-weight:600;font-size:18px;margin:24px 0 6px}
+p{margin:8px 0;max-width:68ch}
+.lede{font-size:18px;color:var(--ink2);max-width:66ch}
+ul,ol{padding-left:22px;max-width:68ch}li{margin:5px 0}
+code,kbd{font-family:var(--mono);font-size:.9em;background:var(--panel);padding:1px 5px;border-radius:3px}
+pre{font-family:var(--mono);font-size:13px;background:var(--panel);padding:12px 14px;border-radius:4px;overflow-x:auto;line-height:1.5}
+pre code{background:none;padding:0}
+.tblwrap{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--rule)}
+td{padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n{text-align:right;font-family:var(--mono)}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.step{background:var(--panel);border-left:3px solid var(--acc);padding:10px 12px;border-radius:0 4px 4px 0}
+.step b{display:block;font-family:var(--disp);font-size:15px}
+.step span{font-size:13.5px;color:var(--ink2)}
+.step.rev{border-left-color:var(--warn)}
+.step.gate{border-left-color:var(--crit)}
+.callout{border:1px solid var(--rule);border-left:3px solid var(--crit);padding:10px 14px;border-radius:0 4px 4px 0;margin:14px 0;max-width:68ch}
+.callout.ok{border-left-color:var(--good)}
+.tag{font-family:var(--mono);font-size:11.5px;padding:1px 7px;border-radius:10px;border:1px solid var(--rule);color:var(--ink2);white-space:nowrap}
+.tag.me{color:var(--acc-ink);border-color:var(--acc)}
+.tag.you{color:var(--warn);border-color:var(--warn)}
+.tag.rv{color:var(--crit);border-color:var(--crit)}
+.tag.done{color:var(--good);border-color:var(--good)}
+small{color:var(--ink2)}
+</style>
+<main>
+<div class="eyebrow">so101_datagen · plan, as built · 2026-09-02</div>
+<h1>Speed Loop</h1>
+<p class="lede">A reviewer agent tunes a 3-minute executor agent until the arm runs pick-and-place fast from anywhere in the workspace. Nothing is recorded while it runs. Then that executor records the next dataset.</p>
+
+<div class="callout ok"><b>Status.</b> Harness built, dry-run tested, committed (tag <code>good</code> = baseline tools), service installed but not started. The robot is disconnected; the first real iteration is the baseline test. Start: <code>systemctl --user start speedloop</code>. Stop: <code>touch state/HALT_SPEEDLOOP</code>. Board: <code>iters/board.md</code>. Live timer: the camera page at port 8090 shows the current phase, the executor countdown from wake to kill, the done mark, the last result and the running tally.</div>
+
+<h2>What the factory does today, in the terms that matter here</h2>
+<p>The supervisor (<code>factory.sh</code>, systemd unit <code>factory</code>) spawns one <code>claude -p</code> sortie at a time with a budget of 8 episodes or 40 minutes. Inside the sortie the agent's nominal loop is four scripts: <code>coverage.py next</code>, <code>reset_to.py</code>, <code>episode.py</code>, <code>coverage.py mark</code>. The LLM is never inside the motion. Every streamed move ran at a fixed <b>30 degrees per second</b>, and nothing in <code>tools/</code> could change that. So the arm has run at one speed for all 93 episodes.</p>
+
+<h3>Where a 5.4-minute factory episode went</h3>
+<div class="tblwrap"><table>
+<tr><th>Segment</th><th>Median</th><th>Notes</th></tr>
+<tr><td>Commit to commit (whole cycle)</td><td class="n">327 s</td><td>p25 281 s, p75 377 s, best 213 s</td></tr>
+<tr><td>Video encode inside commit</td><td class="n">108 s</td><td>71 to 155 s; software x264 on the Pi. <b>Absent in the speed loop</b> (no recording)</td></tr>
+<tr><td>Recorded arm motion</td><td class="n">55 s</td><td>via, hover and return-home legs about 6 s each at 30 °/s</td></tr>
+<tr><td>Unrecorded reset (pick from X, place at cell)</td><td class="n">~70 s</td><td>same 30 °/s streamer, plus one landing correction. <b>Done by the harness, off the clock</b></td></tr>
+<tr><td>Connect, home, scan, score, judge wait</td><td class="n">~25 s</td><td></td></tr>
+<tr><td>Agent thinking between scripts</td><td class="n">15–60 s</td><td>much more when it investigates (s0035 spent 30 min on a stranded roll)</td></tr>
+</table></div>
+<p>So the executor's 180 s clock covers: wake-up, its own thinking, one <code>episode.py --rehearse</code> run (connect, home, scan, ~55 s of motion at baseline speed). The baseline should fit with about a minute to spare; the reviewer's job is to widen that margin and keep it wide on every cell.</p>
+
+<h3>Start positions: not one side, but lopsided</h3>
+<p>Episodes have started in all four quadrants around the X, but the X sits at radius 0.19 m and the reach quad spans 0.08 to 0.41 m, so most cells are beyond the X. Quadrants are measured relative to the X, positive x pointing away from the base.</p>
+<div class="tblwrap"><table>
+<tr><th>Quadrant (rel. to X)</th><th>Cells in grid</th><th>Episodes</th><th>Successes</th></tr>
+<tr><td>Farther out, right (+x, −y)</td><td class="n">27</td><td class="n">34</td><td class="n">27</td></tr>
+<tr><td>Farther out, left (+x, +y)</td><td class="n">22</td><td class="n">24</td><td class="n">19</td></tr>
+<tr><td>Nearer base, right (−x, −y)</td><td class="n">13</td><td class="n">23</td><td class="n">20</td></tr>
+<tr><td>Nearer base, left (−x, +y)</td><td class="n">8</td><td class="n">12</td><td class="n">12</td></tr>
+</table></div>
+<p>The speed loop walks the full 70-cell serpentine order, every cell including the 12 the factory marked hard, wrapping into a new pass. A block of 3 consecutive runs therefore probes one strip of the table; the reviewer prompt says so and tells it to read across blocks. Cells whose reset fails twice are skipped for the rest of the pass and get one more try next pass. Moving the X to the middle of the reach quad remains a recommendation for later, when the tools are being pointed at collection again.</p>
+
+<h2>The loop, as built</h2>
+<div class="flow">
+<div class="step"><b>1 · Next cell</b><span>Serpentine over all 70 cells, wrapping. <code>speedloop.py next</code>.</span></div>
+<div class="step"><b>2 · Harness reset</b><span>Scripted <code>reset_to.py</code>, up to two attempts, landing within 3 cm accepted. Not on the clock. Park.</span></div>
+<div class="step gate"><b>3 · Executor, 180 s</b><span>Prompt = <code>executor.md</code> + cell block. <code>setsid timeout -s KILL 180</code>: the agent and every tool it spawned die together.</span></div>
+<div class="step"><b>4 · Park and score</b><span><code>go_home.py</code> opens the gripper and homes. Fresh top frame: metric landing distance + independent judge. Time to done from the executor's own marker.</span></div>
+<div class="step"><b>5 · Bundle</b><span><code>iters/iNNNN/</code>: prompt, raw stream, transcript, commands run, cost, checkpoint photos, final frame, result.json.</span></div>
+<div class="step rev"><b>6 · Every 3 runs</b><span>Auto-revert check, then the reviewer: has the arm (unrecorded) to rehearse a change, 45 min cap, one change or a hold, committed with a hypothesis.</span></div>
+</div>
+
+<h3>How recording is locked out</h3>
+<p>The supervisor writes <code>state/sortie.json</code> with the episode counter already at the cap before every iteration. The frozen record gate refuses to open the dataset, so <code>episode.py</code> can only run with <code>--rehearse</code>; the executor's permissions and prompt say the same thing, but the lock is structural.</p>
+
+<h3>Roles and their editable surfaces</h3>
+<div class="tblwrap"><table>
+<tr><th>Who</th><th>May do</th><th>May not</th></tr>
+<tr><td>Executor <span class="tag">180 s</span></td><td>Run <code>episode.py --rehearse</code>, <code>scan.py</code>, <code>speedloop.py done</code>. Read tools.</td><td>Write anything. Reset, mark coverage, nudge, git.</td></tr>
+<tr><td>Reviewer <span class="tag rv">arm, unrecorded</span></td><td>Edit <code>tools/</code>, <code>speedloop/executor.md</code>, <code>speedloop/config.json</code> (model, max turns, thinking budget, effort), <code>calib/motion.json</code> (speed, within ceilings). Drive the arm with <code>reset_to.py</code> and <code>episode.py --rehearse</code> to test a change from two or more cells before committing it. Read every bundle. git add/commit/revert.</td><td>Record (gate locked), mark coverage, run <code>sim_probe.py</code> or <code>park_safe.py</code>. Touch <code>lib/</code>, judge prompt, dataset, sidecars, coverage, the supervisor, its own prompt, the ceilings.</td></tr>
+<tr><td>Recovery <span class="tag">after 2 failed resets</span></td><td>Any arm tool, unrecorded, to get a stranded roll back in view at r 0.15–0.30.</td><td>Write files, git, record.</td></tr>
+<tr><td>Harness <span class="tag me">frozen</span></td><td>Cell order, reset, clock, kill, park, scoring, bundling, board, auto-revert, review cadence.</td><td></td></tr>
+</table></div>
+
+<h3>Score</h3>
+<p>Primary: success rate over the last 9 executor runs at or above 80 %. Second: median time to done of successful runs. Third: motion time, since that is what the policy will imitate. Success = metric landing within 1.0 cm, or the judge's majority-on-X. A killed run scores 180 s if the roll still ended on the X, and a failure otherwise.</p>
+
+<h3>Guardrails in the frozen layer</h3>
+<ul>
+<li><b>Speed ceilings.</b> <code>calib/motion.json</code> is read by <code>lib/arm.py</code> and clamped: transit legs at most 90 °/s, the descent, grasp, set and release phases at most 45 °/s. Baseline is 30/30, identical to every recorded episode so far.</li>
+<li><b>Auto-revert.</b> If a block scores 0/3 after the tool state changed and the previous block scored 2 or better, the supervisor restores the lever files from tag <code>good</code> and commits. A block at 2/3 or better moves <code>good</code> forward. Change detection hashes the lever files' content, not git HEAD, so review notes never look like a tool change.</li>
+<li><b>Process-group kill.</b> Executor and reviewer run under <code>setsid</code>; the deadline or cap kills the whole group, then a pkill sweep for any arm tool, then park. The reviewer's checkpoint photos move into its own <code>rNNNN.runs/</code> folder so they never contaminate the next iteration's bundle.</li>
+<li><b>Recovery.</b> Two consecutive reset failures spawn a recovery agent (25 min cap) instead of stranding the loop on a roll at the frame edge.</li>
+</ul>
+
+<h3>What the reviewer will most likely find, in order</h3>
+<ol>
+<li>Raise arm speed from 30 to 60–75 °/s. Halves motion time; also halves the harness reset, so more iterations per hour.</li>
+<li>Shrink the executor to one tool call and the done marker. Then a cheaper model with a small thinking budget suffices for the nominal path. The reviewer can rehearse the exact command from a few cells before the executor ever sees it.</li>
+<li>Trim waypoints in the technique (the via and hover legs) once the faster speed proves stable in the grasp photos.</li>
+<li>Fix whatever the far and near cells actually fail on, since the serpentine will keep handing them over.</li>
+</ol>
+<p>Item 2 is the honest end state: the fastest executor is barely an agent. The agent's value is in recovery, and the reviewer's value is in getting it there.</p>
+
+<h2>What to watch on the first real iterations</h2>
+<ul>
+<li><b>Baseline block (iterations 1–3)</b> at 30 °/s on cells c000, c001, c002. c000 is a hard far cell (r 0.38); expect a reset failure or a slow run there. If the executor cannot finish inside 180 s at baseline on a mid cell, the deadline is doing its job and the reviewer's first move is speed.</li>
+<li><b>Kill behaviour.</b> After the first killed run, check <code>iters/iNNNN/home.jsonl</code> shows <code>homed: true</code> and the next reset found the roll. That path is untested on hardware.</li>
+<li><b>Cost.</b> Each iteration records the executor's cost from the CLI result event; the reviewer's cost is in <code>iters/reviews/rNNNN.stream.jsonl</code>. Nothing logged cost before, so the first block sets the number.</li>
+<li><b>Backup timer.</b> It commits and pushes the repo hourly, including anything the reviewer left uncommitted. Harmless, but it means the reviewer's commit history is interleaved with data commits.</li>
+</ul>
+
+<h2>Handover to collection</h2>
+<p>When the last 9 runs are at or above 80 % and the median time to done has stopped falling: <code>touch state/HALT_SPEEDLOOP</code>, tag the tools, remove the factory's <code>state/HALT</code>, and start <code>factory</code> again. The factory's executor already calls the same <code>episode.py</code> and reads the same <code>calib/motion.json</code>, so the recorded episodes come out at the tuned speed. Curate those as their own speed regime; mixing 30 °/s and 70 °/s demonstrations in one training set teaches an ambiguous speed.</p>
+<p><small>Disk on the Pi: 4.8 GB free of 29 GB. Iteration bundles hold photos only, roughly 2–5 MB each.</small></p>
+</main>
+</body></html>

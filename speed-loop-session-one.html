@@ -1,0 +1,140 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style><title>Speed Loop Session One</title></head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f5f6f2; --panel:#ecEEe7; --ink:#1c221f; --ink2:#4a534e; --rule:#cfd4cc;
+  --acc:#0e6e6b; --acc-ink:#0b5654; --warn:#b3550f; --crit:#a3261e; --good:#2f7a3a;
+  --add:#e3f1e5; --del:#f6e3e1;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --disp:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2320; --ink:#e6e9e3; --ink2:#a5ada6; --rule:#343c37;
+  --acc:#4fb5b0; --acc-ink:#7fd0cb; --warn:#e08a45; --crit:#e2645a; --good:#6cbf76; --add:#1f3324; --del:#3a2321;}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2320; --ink:#e6e9e3; --ink2:#a5ada6; --rule:#343c37;
+  --acc:#4fb5b0; --acc-ink:#7fd0cb; --warn:#e08a45; --crit:#e2645a; --good:#6cbf76; --add:#1f3324; --del:#3a2321;}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0}
+main{max-width:78ch;margin:0 auto;padding:40px 22px 80px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc-ink)}
+h1{font-family:var(--disp);font-weight:600;font-size:40px;line-height:1.05;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--disp);font-weight:600;font-size:24px;margin:44px 0 10px;text-wrap:balance;padding-top:14px;border-top:1px solid var(--rule)}
+h3{font-family:var(--disp);font-weight:600;font-size:18px;margin:24px 0 6px}
+p{margin:8px 0;max-width:68ch}
+.lede{font-size:18px;color:var(--ink2);max-width:66ch}
+ul,ol{padding-left:22px;max-width:68ch}li{margin:5px 0}
+code{font-family:var(--mono);font-size:.9em;background:var(--panel);padding:1px 5px;border-radius:3px}
+pre{font-family:var(--mono);font-size:12.5px;background:var(--panel);padding:12px 14px;border-radius:4px;overflow-x:auto;line-height:1.5;margin:8px 0}
+pre code{background:none;padding:0}
+pre .a{background:var(--add);display:block}pre .d{background:var(--del);display:block}
+.tblwrap{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--rule)}
+td{padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n{text-align:right;font-family:var(--mono)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+.kpi{background:var(--panel);padding:10px 12px;border-radius:4px}
+.kpi b{display:block;font-family:var(--mono);font-size:22px;font-weight:500}
+.kpi span{font-size:13px;color:var(--ink2)}
+.kpi .from{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+.callout{border:1px solid var(--rule);border-left:3px solid var(--good);padding:10px 14px;border-radius:0 4px 4px 0;margin:14px 0;max-width:68ch}
+.callout.warn{border-left-color:var(--warn)}
+.tag{font-family:var(--mono);font-size:11.5px;padding:1px 7px;border-radius:10px;border:1px solid var(--rule);color:var(--ink2);white-space:nowrap}
+.tag.ok{color:var(--good);border-color:var(--good)}.tag.rv{color:var(--crit);border-color:var(--crit)}.tag.hold{color:var(--warn);border-color:var(--warn)}
+small{color:var(--ink2)}
+</style>
+<main>
+<div class="eyebrow">so101_datagen · speed loop · 2026-09-02, 13:03 to 16:35</div>
+<h1>Speed Loop Session One</h1>
+<p class="lede">Three and a half hours of a 3-minute executor being tuned by a reviewer that could read its runs and rehearse on the arm. What moved, what did not, and what the tools look like now.</p>
+
+<div class="kpis">
+<div class="kpi"><b>77 → 68 s</b><span>median time to done, successful runs</span><span class="from">baseline → last 9</span></div>
+<div class="kpi"><b>48 → 41 s</b><span>arm motion per run</span><span class="from">−16 %</span></div>
+<div class="kpi"><b>83 → 89 %</b><span>success rate</span><span class="from">10/12 → 8/9</span></div>
+<div class="kpi"><b>180 → 90 s</b><span>deadline</span><span class="from">operator, two steps</span></div>
+<div class="kpi"><b>23 runs</b><span>executor runs scored</span><span class="from">35 iterations, 22 cells</span></div>
+<div class="kpi"><b>$69</b><span>agent cost</span><span class="from">$9 executor · $60 reviewer</span></div>
+</div>
+
+<h2>Performance, start against end</h2>
+<div class="tblwrap"><table>
+<tr><th>Window</th><th>Runs</th><th>Success</th><th>Median done</th><th>p90 done</th><th>Far cells (r ≥ 0.30)</th><th>Motion</th></tr>
+<tr><td>Baseline · 30 °/s everywhere · iterations 1–13</td><td class="n">12</td><td class="n">10 (83 %)</td><td class="n">77 s</td><td class="n">86 s</td><td class="n">3 / 5, 81 s</td><td class="n">47.9 s</td></tr>
+<tr><td>After the speed split · 60 transit / 30 loaded · 15 onward</td><td class="n">11</td><td class="n">10 (91 %)</td><td class="n">67.5 s</td><td class="n">80 s</td><td class="n">3 / 4, 69 s</td><td class="n">40.5 s</td></tr>
+<tr><td>Last 9</td><td class="n">9</td><td class="n">8 (89 %)</td><td class="n">68 s</td><td class="n">80 s</td><td class="n">3 / 4, 69 s</td><td class="n">—</td></tr>
+</table></div>
+<p>Time to done is measured from the moment the executor process wakes to its done marker. Of a typical 68 s, about 8 s is the agent (4 s from wake to first tool call, 4 s to sign off), 17 s is tool start-up inside <code>episode.py</code> (connect, home, scan), and 41 s is arm motion. Every one of the 23 runs used exactly two tool calls and no extended thinking on the nominal path; the executor never needed a prompt or model change.</p>
+
+<h3>What did not improve</h3>
+<div class="tblwrap"><table>
+<tr><th>Item</th><th>Baseline</th><th>End</th><th>Why</th></tr>
+<tr><td>Harness reset time (successful resets)</td><td class="n">92 s</td><td class="n">98 s</td><td>Loaded legs were deliberately kept at 30 °/s; resets are mostly carry plus a re-pick correction, and the sampler moved them to harder cells.</td></tr>
+<tr><td>Reset success</td><td colspan="2" class="n">23 / 35 overall</td><td>Failures: 5 near-base (r &lt; 0.15, no reachable pitch), 3 mid, 4 far. Two in a row spawned a recovery agent three times.</td></tr>
+<tr><td>Kills</td><td colspan="2" class="n">3, all at r ≥ 0.32</td><td>c004, c020, c035. In each the servo pick missed twice and the fallback started too late to finish.</td></tr>
+</table></div>
+<p>The reset is now the dominant cost per iteration, and its time is not joint speed: each leg is a move-and-measure loop with up to six quarter-second settle polls, repeated for the landing correction. Nobody has touched that yet.</p>
+
+<h2>What the reviewers decided</h2>
+<div class="tblwrap"><table>
+<tr><th>Review</th><th>Block</th><th>Decision</th><th>Evidence on the arm</th></tr>
+<tr><td>r0004, r0008</td><td>1, 2</td><td><span class="tag rv">killed</span> by a harness bug before writing anything</td><td>—</td></tr>
+<tr><td>r0013</td><td>9, 11, 12</td><td><span class="tag ok">change</span> Transit legs 60 °/s; lift, carry, descent, grasp, set, release stay 30. Fixed a retry tag that would have run a descent at transit speed.</td><td>Tried 60 on loaded legs first: its own reset and the loop's c011 reset landed 2–5 cm off, roll shifting in the jaws. Split config: c003 motion 42.8 s (was 47.3), c008 42.1 s (was 50.7).</td></tr>
+<tr><td>r0019</td><td>15, 16, 18</td><td><span class="tag ok">change</span> One extra wrist-camera correction in the servo pick beyond r 0.30. Mid-table picks byte-for-byte unchanged.</td><td>Both far failures ran out of corrections with the ring still 12–15 mm from reference; the roll appears clipped at the bottom of the wrist frame at pitch 65–72. Rehearsed c020, the cell that failed in run 13: grasped first try, 40 s.</td></tr>
+<tr><td>r0027</td><td>20, 24, 26</td><td><span class="tag hold">tried, reverted</span> Far-cell corrections at hover height. Kept r0019's change.</td><td>Both rehearsal descents missed. Diagnosed two distinct far failures: at r 0.41 the wrist camera is blind below pitch 58; at r 0.35 on the +az side the open jaw sits at roll height and shoves it. Confirmed r0019 with run 28 at c047.</td></tr>
+<tr><td>r0032</td><td>20–31</td><td><span class="tag ok">change</span> Push detection: after a ≥ 12 mm correction, if the ring moved less than 35 % of the predicted pixels or against the predicted direction, lift, park, rescan and restart the attempt.</td><td>Built from the c028 shove (ring moved 88 px where the model predicts 310) versus clean runs (0.9–1.4× predicted). Rehearsal was queued when the session stopped.</td></tr>
+</table></div>
+
+<h2>Tool diff</h2>
+<p>Everything below is what the next factory run inherits, since the collector calls the same <code>episode.py</code>, <code>technique.py</code> and speed file. Diff is from the loop's first commit this afternoon to the stop.</p>
+
+<h3><code>calib/motion.json</code> — new file, the speed knob</h3>
+<pre><code><span class="d">- "max_dps": 30.0,</span><span class="a">+ "max_dps": 60.0,</span>  "slow_dps": 30.0,
+<span class="d">- "slow_phases": ["mid", "down", "grasp", "set", "release"]</span><span class="a">+ "slow_phases": ["mid", "down", "grasp", "lift", "carry", "recarry", "set", "release"]</span></code></pre>
+<p>Ceilings of 90 and 45 °/s are enforced in the frozen arm layer. Loaded and approach legs run at the legacy speed; only unloaded transit is faster.</p>
+
+<h3><code>tools/technique.py</code> — +77 / −8 lines, three changes</h3>
+<pre><code>  # r0013: retry tag kept in the slow phase
+<span class="d">- td.move_measured(aim + [0, 0, MID_DZ], pt.DESC_GRIP, seed=seed, tag=f"{tag}r")</span><span class="a">+ td.move_measured(aim + [0, 0, MID_DZ], pt.DESC_GRIP, seed=seed, tag=f"{tag}r_mid")</span>
+  # r0019: one more wrist correction beyond r 0.30
+<span class="a">+ FAR_SERVO_R = 0.30
++ FAR_SERVO_EXTRA_CORR = 1</span><span class="d">- for k in range(max_corr + 1):</span><span class="a">+ n_corr = max_corr + (FAR_SERVO_EXTRA_CORR if np.hypot(*xy) &gt; FAR_SERVO_R else 0)
++ for k in range(n_corr + 1):</span>
+  # r0032: push detection
+<span class="a">+ PUSH_MIN_SHIFT = 0.012;  PUSH_RATIO = 0.35;  PUSH_MIN_COS = 0.3
++ def servo_expected_px(shift, radius, cal, xy): ...   # ring displacement K predicts for a shift
++ ... after each plausible look: ratio = actual / predicted; cos = direction agreement
++ ... if prev shift ≥ PUSH_MIN_SHIFT and (ratio &lt; PUSH_RATIO or cos &lt; PUSH_MIN_COS):
++         lift, park, rescan the roll, start the next attempt from its new position</span></code></pre>
+
+<h3>Other files</h3>
+<ul>
+<li><code>speedloop/config.json</code>: <code>deadline_s</code> 180 → 120 → 90, operator-owned. Model, turns, thinking budget untouched.</li>
+<li><code>speedloop/executor.md</code>: unchanged. No reviewer found a reason to edit the executor's instructions.</li>
+<li><code>tools/park_safe.py</code>: now delegates to <code>go_home.py</code>, removing the last motion path outside the speed knob and the legacy elbow-stalling park pose. Operator change.</li>
+<li><code>lib/arm.py</code> (frozen layer, operator): speed knob with ceilings, arm mutex, role-prefixed run directories.</li>
+</ul>
+
+<h2>Harness changes made during the session</h2>
+<ul>
+<li><b>Concurrency.</b> The reviewer moved to a parallel lane after the first hour; it borrows the arm in bounded windows between runs. The judge call overlaps the next reset. This removed the 45-minute pauses.</li>
+<li><b>Two sweep bugs.</b> The post-run process sweep matched agents by their prompt text and killed two reviewers; then it killed reviewer tools queued for an arm window. Both fixed; the second fix required the 16:29 restart.</li>
+<li><b>Sampler.</b> Serpentine replaced by a weighted random draw favouring unrun, failing and outer cells, with an 8 cm spread rule. 34 distinct cells were drawn over 35 iterations.</li>
+<li><b>Live timer and feeds</b> on the camera page; per-cell table on the board; deadline hot-reloaded from the config.</li>
+<li><b>Operator error.</b> A dry-run test at 13:47 ran against the live loop and destroyed the first two real iteration bundles. Guarded against since.</li>
+</ul>
+
+<h2>Open problems, in the order they cost you</h2>
+<ol>
+<li><b>Near-base ring, r &lt; 0.15.</b> Five reset failures with "no pitch reaches the cell". The reset tool cannot place there, so those cells are never exercised. Same gap the factory marked hard.</li>
+<li><b>Far edge, r ≥ 0.38.</b> The wrist camera is blind below pitch 58, so the servo pick has no correction signal and both kills happened there. r0027 called it structural.</li>
+<li><b>Reset time.</b> ~97 s per iteration, dominated by settle polling, not speed.</li>
+<li><b>Place bias is not learned in rehearsal.</b> Landings sit 1 to 2 cm off in a consistent direction. Recorded episodes would learn it; the speed loop does not.</li>
+<li><b>Fallback never fits.</b> The executor's second attempt starts at 60–100 s and the deadline is 90. Either the fallback goes, or the first attempt must be made to work at far cells.</li>
+</ol>
+
+<div class="callout warn"><b>Before the next collection run.</b> Tag the current tools. Recorded episodes will now move at 60 °/s on transit legs; the 93 existing episodes were recorded at 30. Train them as separate regimes, or record enough at the new speed to stand alone. The push-detection change has not yet been rehearsed on the arm; its first real test will be the collector's, so watch the first far-cell episodes.</div>
+<p><small>Sources: <code>iters/board.jsonl</code>, <code>iters/reviews/r*.md</code>, <code>git log 4614c60..HEAD</code>, <code>logs/speedloop.log</code>.</small></p>
+</main>
+</body></html>
