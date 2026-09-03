@@ -37,7 +37,6 @@ actually look *better* than the originals.
 | evidence-chains.html | cc94e646 (A) | 2026-09-03 |
 | behavior-ledger.html | 0bc5d025 (A) | 2026-09-03 |
 | project-history.html | a81d59c6 (A) | 2026-09-03 |
-| sbir-coverage-audit.html | 8587c5e3 (A) | 2026-09-03 |
 
 Account A = the account owning the "Overlap-Ensemble ACT" note; account B = the one
 owning "SO101 Data Factory".
@@ -48,11 +47,10 @@ account B and repeat the mirror step.
 
 ## Hosting
 
-This repo is intended for GitHub Pages (serve from root of `main`). Note: on a free
-GitHub plan, Pages requires the repo to be **public** — everything in here becomes
-world-readable, including the SBIR audit (business-development intelligence). Keep
-the repo private until that trade-off is deliberate, or split sensitive pages into a
-separate private repo.
+Public repo, served via GitHub Pages from the root of `main`. Everything here is
+world-readable — business-development pages (the SBIR Coverage Audit) live in the
+separate **private** `bd-artifact-archive` repo instead. Before adding a page here,
+check it isn't BD/competitive material; if it is, it goes in the private repo.
 
 The claude.ai originals remain live and editable; this archive is a mirror, not a
 replacement. When an artifact is updated on claude.ai, re-run the mirror step to
