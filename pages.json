@@ -41,7 +41,7 @@
           "file": "so101-data-factory.html",
           "title": "SO101 Data Factory",
           "date": "2026-09-04",
-          "desc": "An LLM agent demonstrates, ACT trains, and a fixed-start benchmark scores each policy: 31 taught starts, act_v0 39 % vs act_v1 16 % on protocol 312efade2c."
+          "desc": "An LLM agent demonstrates, ACT trains, and a fixed-start benchmark scores each policy three ways: act_v0 39 %, act_v1 16 % on its final frame but 14/31 placements — it places faster, then undoes them."
         }
       ]
     },
