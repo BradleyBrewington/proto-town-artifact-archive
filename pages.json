@@ -1,0 +1,72 @@
+{
+  "title": "Proto-Town Artifact Archive",
+  "eyebrow": "Proto-Town · AI in Physical Space",
+  "heading": "Artifact Archive",
+  "sub": "Design notes, session reports, and audits from the Proto-Town embodiment project — authored as self-contained pages you own, hosted on GitHub Pages.",
+  "sections": [
+    {
+      "name": "SO-101 arm · policy & control",
+      "pages": [
+        {
+          "file": "overlap-ensemble-act.html",
+          "title": "Overlap-Ensemble ACT on the Pi",
+          "date": "2026-09-03",
+          "desc": "Pipelined chunk inference with a freshness-weighted fade-in ensemble; α-sweep field results and the disagreement-gated controller."
+        }
+      ]
+    },
+    {
+      "name": "SO-101 arm · data factory",
+      "pages": [
+        {
+          "file": "so101-data-factory.html",
+          "title": "SO101 Data Factory",
+          "date": "2026-09-03",
+          "desc": "The collect→curate→train→DAgger loop: camera daemon, record gating, build sequence, open decisions. Includes embedded demo video."
+        },
+        {
+          "file": "so101-factory-wiring.html",
+          "title": "SO101 Factory Wiring",
+          "date": "2026-09-01",
+          "desc": "System reference: supervisor loop, sortie internals, the 30 Hz recorded-tick contract, file permissions map, data formats."
+        },
+        {
+          "file": "so101-speed-loop.html",
+          "title": "SO101 Speed Loop",
+          "date": "2026-09-02",
+          "desc": "Plan, as built: a reviewer agent tunes a 3-minute executor until the arm runs pick-and-place fast from anywhere."
+        },
+        {
+          "file": "speed-loop-session-one.html",
+          "title": "Speed Loop Session One",
+          "date": "2026-09-02",
+          "desc": "Results of the first tuning session: 77→68 s median, the speed split, push detection, and what did not improve."
+        }
+      ]
+    },
+    {
+      "name": "Gantry era · analyses",
+      "pages": [
+        {
+          "file": "evidence-chains.html",
+          "title": "Proto-Town — Evidence Chains",
+          "date": "2026-08-17",
+          "desc": "Six verbatim evidence chains from the run transcripts: false beliefs born, encoded, inherited, and collapsed."
+        },
+        {
+          "file": "behavior-ledger.html",
+          "title": "Behavior Ledger — laws2-loop1",
+          "date": "2026-08-10",
+          "desc": "Evidence-cited audit of one autonomous run, with blind cross-checks run against the author's own bias."
+        },
+        {
+          "file": "project-history.html",
+          "title": "Proto-Town: Project History",
+          "date": "2026-08-05",
+          "desc": "How an AI comes to perceive, model, and act on physical space — exp-001 and exp-002, fully cited."
+        }
+      ]
+    }
+  ],
+  "note": "Not yet archived (owned by the second claude.ai account): <em>Start-Point Range</em>, <em>SO101 Factory Wiring</em> (earlier variant), <em>Claude touches three rolls of tape</em>. Log into that account in a Claude Code session and re-run the mirror step in the README."
+}
