@@ -1,57 +1,61 @@
-# Proto-Town Artifact Archive
+# Proto-Town Pages
 
-Static mirror of claude.ai Code artifacts from the Proto-Town / AI-in-Physical-Space
-project, consolidated from **two claude.ai accounts** into one place so the pages are
-readable regardless of which account is logged in.
+Self-contained HTML pages — design notes, session reports, audits — authored as
+files **you own** and served via **GitHub Pages**. This is the replacement for
+claude.ai artifacts: same self-contained-HTML page, but the output is a file in
+a repo you control (editable, deletable, access-controlled, shareable by plain
+URL, no per-account ownership trap).
 
-Open `index.html` for the catalog.
+Live catalog: **https://bradleybrewington.github.io/proto-town-artifact-archive/**
+Open `index.html` locally for the same catalog.
 
-## How pages get here
+BD / competitive material does **not** go here — it goes in the separate
+**private** `bd-artifact-archive` repo. Check before publishing.
 
-Artifacts on claude.ai are self-contained HTML (strict CSP, everything inlined), so
-they work as plain static files. The server wraps each one in a skeleton that injects
-a ~14 KB "frame-runtime" script (theme sync + live-edit plumbing for the claude.ai
-shell) which is inert outside that shell. The mirror step:
+## Publish a new page (the main workflow)
 
-1. In a Claude Code session logged into the owning account, ask Claude to fetch the
-   artifact (`WebFetch` on the `claude.ai/code/artifact/{uuid}` URL returns the raw
-   HTML for artifacts the logged-in account owns — plain `curl` does NOT work, it
-   gets a Cloudflare 403).
-2. Run `tools/strip_artifact.py IN.html OUT.html` — removes the frame-runtime block
+Author a self-contained HTML file (inline everything — same CSP-safe rules as an
+artifact; no external CSS/JS/font/image URLs), then:
+
+```sh
+tools/publish.sh path/to/page.html \
+  --title "Human Title" \
+  --section "SO-101 arm · data factory" \
+  --desc "One-line description for the catalog." \
+  [--slug my-page.html] [--date YYYY-MM-DD] [--no-push]
+```
+
+It runs a **secret gate** (aborts on a real Anthropic key, Telegram token, or
+private key), copies the file in under its slug, updates `pages.json`, regenerates
+`index.html` from that manifest, commits, and pushes. It prints the live URL;
+Pages rebuilds in ~30-60 s. Re-running with the same slug updates the page in place.
+
+The catalog is **data, not hand-edited HTML**: `pages.json` is the source of truth
+and `tools/gen_index.py` renders it, so the index can never drift from what was
+actually published. To restyle the index, edit `gen_index.py`; to fix a title or
+move a page between sections, edit `pages.json` (or re-publish) and run
+`py tools/gen_index.py`.
+
+`publish.sh` defaults to the Windows `py` launcher; on other machines run it as
+`PYTHON=python3 tools/publish.sh ...`.
+
+## Import an existing claude.ai artifact (one-time, legacy)
+
+Artifacts are already self-contained HTML wrapped in a server skeleton that injects
+a ~14 KB "frame-runtime" script (inert outside claude.ai). To mirror one:
+
+1. In a Claude Code session **logged into the account that owns the artifact**,
+   `WebFetch` the `claude.ai/code/artifact/{uuid}` URL — it returns the raw HTML
+   for owned artifacts (plain `curl` gets a Cloudflare 403; a wrong login gets
+   "not found"). Large captures auto-save to a tool-results file.
+2. `py tools/strip_artifact.py IN.html OUT.html` — removes the frame-runtime block
    and hoists the body-level `<title>` into `<head>`. Nothing else is touched.
-3. Add a row to `index.html`, commit, push.
+3. Publish the stripped file with `tools/publish.sh` as above.
 
-Google Fonts `<link>` tags in some pages were CSP-blocked on claude.ai (silent
-system-font fallback) but load normally when self-hosted — the pages here can
-actually look *better* than the originals.
-
-## Contents
-
-| Page | Source artifact (account) | Archived |
-|---|---|---|
-| overlap-ensemble-act.html | 37a6995e (A) | 2026-09-03 |
-| so101-data-factory.html | cc80c2fc (B) | 2026-09-03 |
-| so101-factory-wiring.html | ba0ed158 (A) | 2026-09-03 |
-| so101-speed-loop.html | 9baaaba8 (A) | 2026-09-03 |
-| speed-loop-session-one.html | 8f352c97 (A) | 2026-09-03 |
-| evidence-chains.html | cc94e646 (A) | 2026-09-03 |
-| behavior-ledger.html | 0bc5d025 (A) | 2026-09-03 |
-| project-history.html | a81d59c6 (A) | 2026-09-03 |
-
-Account A = the account owning the "Overlap-Ensemble ACT" note; account B = the one
-owning "SO101 Data Factory".
-
-**Still missing (account B):** Start-Point Range (37ede268), SO101 Factory Wiring
-earlier variant (1938b946), Claude touches three rolls of tape (3de0452c). Log into
-account B and repeat the mirror step.
+Google Fonts `<link>` tags that were CSP-blocked on claude.ai load normally when
+self-hosted, so mirrored pages can look *better* than the originals.
 
 ## Hosting
 
-Public repo, served via GitHub Pages from the root of `main`. Everything here is
-world-readable — business-development pages (the SBIR Coverage Audit) live in the
-separate **private** `bd-artifact-archive` repo instead. Before adding a page here,
-check it isn't BD/competitive material; if it is, it goes in the private repo.
-
-The claude.ai originals remain live and editable; this archive is a mirror, not a
-replacement. When an artifact is updated on claude.ai, re-run the mirror step to
-refresh its page here.
+Public repo, served via GitHub Pages from the root of `main`; `.nojekyll` keeps
+Jekyll off so files serve verbatim. `gh` is authed as BradleyBrewington.
