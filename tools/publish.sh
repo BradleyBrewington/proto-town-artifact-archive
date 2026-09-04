@@ -12,7 +12,8 @@ set -euo pipefail
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 PYTHON="${PYTHON:-py}"  # Windows launcher; override with PYTHON=... on other OSes
-BASE_URL="https://bradleybrewington.github.io/proto-town-artifact-archive"
+# base_url lives in pages.json (absent in private repos with no Pages)
+BASE_URL="$("$PYTHON" -c "import json;print(json.load(open('$REPO/pages.json',encoding='utf-8')).get('base_url') or '')" 2>/dev/null || true)"
 
 SRC="" TITLE="" SECTION="" DESC="" SLUG="" DATE="" PUSH=1
 while [ $# -gt 0 ]; do
@@ -57,4 +58,8 @@ if [ "$PUSH" -eq 1 ]; then
 else
   echo "committed locally (--no-push). To go live: git push origin main"
 fi
-echo "  $BASE_URL/$SLUG"
+if [ -n "$BASE_URL" ]; then
+  echo "  $BASE_URL/$SLUG"
+else
+  echo "  $REPO/$SLUG  (private repo — no Pages; open locally)"
+fi
