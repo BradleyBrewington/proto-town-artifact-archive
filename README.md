@@ -59,3 +59,13 @@ self-hosted, so mirrored pages can look *better* than the originals.
 
 Public repo, served via GitHub Pages from the root of `main`; `.nojekyll` keeps
 Jekyll off so files serve verbatim. `gh` is authed as BradleyBrewington.
+
+## Install the Claude skill
+
+The workflow is packaged as a Claude Code skill. To install on a new machine:
+
+    mkdir -p ~/.claude/skills/publish-page
+    cp tools/publish-page.SKILL.md ~/.claude/skills/publish-page/SKILL.md
+
+Any Claude agent on the machine (either account, any project) then has
+/publish-page: publish, list, update, and frontend-draft promote.
