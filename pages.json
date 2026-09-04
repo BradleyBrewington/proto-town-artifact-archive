@@ -20,12 +20,6 @@
       "name": "SO-101 arm · data factory",
       "pages": [
         {
-          "file": "so101-data-factory.html",
-          "title": "SO101 Data Factory",
-          "date": "2026-09-03",
-          "desc": "The collect→curate→train→DAgger loop: camera daemon, record gating, build sequence, open decisions. Includes embedded demo video."
-        },
-        {
           "file": "so101-factory-wiring.html",
           "title": "SO101 Factory Wiring",
           "date": "2026-09-01",
@@ -42,6 +36,12 @@
           "title": "Speed Loop Session One",
           "date": "2026-09-02",
           "desc": "Results of the first tuning session: 77→68 s median, the speed split, push detection, and what did not improve."
+        },
+        {
+          "file": "so101-data-factory.html",
+          "title": "SO101 Data Factory",
+          "date": "2026-09-04",
+          "desc": "An LLM agent demonstrates, ACT trains, and a fixed-start benchmark scores each policy: 31 taught starts, act_v0 39 % vs act_v1 16 % on protocol 312efade2c."
         }
       ]
     },
